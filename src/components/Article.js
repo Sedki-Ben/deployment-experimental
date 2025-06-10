@@ -228,35 +228,35 @@ function Article({ article }) {
     switch (category) {
       case 'etoile-du-sahel':
         return {
-          background: 'bg-red-50 dark:bg-red-900/20',
-          text: 'text-red-700 dark:text-red-300',
-          hover: 'hover:bg-red-100 dark:hover:bg-red-900/30',
-          border: 'border-red-300 dark:border-red-600',
-          gradient: 'rgba(239, 68, 68, 0.1), rgba(220, 38, 38, 0.2)'
+          background: 'bg-red-100 dark:bg-red-900/40',
+          text: 'text-red-800 dark:text-red-200',
+          hover: 'hover:bg-red-200 dark:hover:bg-red-900/60',
+          border: 'border-red-500 dark:border-red-400',
+          gradient: 'rgba(220, 38, 38, 0.2), rgba(185, 28, 28, 0.3)'
         };
       case 'the-beautiful-game':
         return {
-          background: 'bg-green-50 dark:bg-green-900/20',
-          text: 'text-green-700 dark:text-green-300',
-          hover: 'hover:bg-green-100 dark:hover:bg-green-900/30',
-          border: 'border-green-300 dark:border-green-600',
-          gradient: 'rgba(34, 197, 94, 0.1), rgba(22, 163, 74, 0.2)'
+          background: 'bg-green-100 dark:bg-green-900/40',
+          text: 'text-green-800 dark:text-green-200',
+          hover: 'hover:bg-green-200 dark:hover:bg-green-900/60',
+          border: 'border-green-500 dark:border-green-400',
+          gradient: 'rgba(22, 163, 74, 0.2), rgba(21, 128, 61, 0.3)'
         };
       case 'all-sports-hub':
         return {
-          background: 'bg-purple-50 dark:bg-purple-900/20',
-          text: 'text-purple-700 dark:text-purple-300',
-          hover: 'hover:bg-purple-100 dark:hover:bg-purple-900/30',
-          border: 'border-purple-300 dark:border-purple-600',
-          gradient: 'rgba(168, 85, 247, 0.1), rgba(147, 51, 234, 0.2)'
+          background: 'bg-purple-100 dark:bg-purple-900/40',
+          text: 'text-purple-800 dark:text-purple-200',
+          hover: 'hover:bg-purple-200 dark:hover:bg-purple-900/60',
+          border: 'border-purple-500 dark:border-purple-400',
+          gradient: 'rgba(147, 51, 234, 0.2), rgba(126, 34, 206, 0.3)'
         };
       default:
         return {
-          background: 'bg-gray-50 dark:bg-gray-900/20',
-          text: 'text-gray-700 dark:text-gray-300',
-          hover: 'hover:bg-gray-100 dark:hover:bg-gray-900/30',
-          border: 'border-gray-300 dark:border-gray-600',
-          gradient: 'rgba(107, 114, 128, 0.1), rgba(75, 85, 99, 0.2)'
+          background: 'bg-gray-100 dark:bg-gray-900/40',
+          text: 'text-gray-800 dark:text-gray-200',
+          hover: 'hover:bg-gray-200 dark:hover:bg-gray-900/60',
+          border: 'border-gray-500 dark:border-gray-400',
+          gradient: 'rgba(75, 85, 99, 0.2), rgba(55, 65, 81, 0.3)'
         };
     }
   };
