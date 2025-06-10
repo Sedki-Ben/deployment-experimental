@@ -591,50 +591,24 @@ function Article({ article }) {
           )}
         </div>
 
-        {/* Article Footer with Enhanced Tags */}
-        <div className={`mt-12 pt-8 border-t ${theme.border} opacity-20`}>
-          {articleData.tags && articleData.tags.length > 0 && (
-            <div className="mb-8">
-              <div className={`flex items-center gap-3 mb-6 ${isRTL ? 'flex-row-reverse' : ''}`}>
-                <div className={`w-1 h-6 rounded-full ${getCategoryTheme().solid}`}></div>
-                <h3 className={`text-lg font-bold ${theme.icon} ${isRTL ? 'text-right' : 'text-left'}`}>
-                  {t('Related Topics')}
-                </h3>
-              </div>
-              
-              <div className={`flex flex-wrap gap-3 ${isRTL ? 'flex-row-reverse' : ''}`}>
-                {articleData.tags.map((tag, index) => {
-                  const categoryColors = getCategoryTagColors();
-                  return (
-                    <span
-                      key={index}
-                      className={`group relative px-4 py-2 rounded-lg text-sm font-semibold 
-                        transition-all duration-300 cursor-pointer transform hover:scale-105 hover:shadow-lg
-                        ${categoryColors.background} ${categoryColors.text} ${categoryColors.hover}`}
-                      style={{
-                        background: `linear-gradient(135deg, ${categoryColors.gradient})`
-                      }}
-                    >
-                      <span className="relative z-10 flex items-center gap-1">
-                        <span className="text-xs opacity-70">#</span>
-                        {tag}
-                      </span>
-                      
-                      {/* Subtle hover effect overlay */}
-                      <div className="absolute inset-0 rounded-lg bg-white dark:bg-black opacity-0 group-hover:opacity-10 transition-opacity duration-300"></div>
-                      
-                      {/* Animated border */}
-                      <div className={`absolute inset-0 rounded-lg border-2 ${categoryColors.border} opacity-0 group-hover:opacity-50 transition-opacity duration-300`}></div>
-                    </span>
-                  );
-                })}
-              </div>
-              
-              {/* Decorative bottom accent */}
-              <div className={`mt-6 h-1 w-24 rounded-full ${getCategoryTheme().solid} opacity-30 ${isRTL ? 'mr-auto' : 'ml-auto'}`}></div>
+        {/* Article Tags - Minimal Design */}
+        {articleData.tags && articleData.tags.length > 0 && (
+          <div className={`mt-8 pt-4 border-t ${theme.border} opacity-30`}>
+            <div className={`flex flex-wrap gap-2 mb-2 ${isRTL ? 'flex-row-reverse' : ''}`}>
+              {articleData.tags.map((tag, index) => {
+                const categoryColors = getCategoryTagColors();
+                return (
+                  <span
+                    key={index}
+                    className={`px-3 py-1 rounded-full text-xs font-medium ${categoryColors.background} ${categoryColors.text}`}
+                  >
+                    {tag}
+                  </span>
+                );
+              })}
             </div>
-          )}
-        </div>
+          </div>
+        )}
 
       </div>
 

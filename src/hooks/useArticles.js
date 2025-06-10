@@ -123,6 +123,7 @@ const transformArticle = (article) => {
     views: article.views || 0,
     slug: article.slug,
     status: article.status,
+    tags: article.tags || [], // Add missing tags property
     isLikedByCurrentUser: article.isLikedByCurrentUser || false
   };
 };
