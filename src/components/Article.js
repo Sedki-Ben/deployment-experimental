@@ -552,15 +552,16 @@ function Article({ article }) {
           )}
         </div>
 
-        {/* Article Tags - Minimal Design */}
+        {/* Article Tags - Match Category Indicator Style */}
         {articleData.tags && articleData.tags.length > 0 && (
           <div className={`mt-8 pt-4 border-t ${theme.border} opacity-30`}>
             <div className={`flex flex-wrap gap-2 mb-2 ${isRTL ? 'flex-row-reverse' : ''}`}>
               {articleData.tags.map((tag, index) => (
                 <span
                   key={index}
-                  className={`px-3 py-1 rounded-full text-xs font-medium transition-colors duration-200 ${theme.light}`}
+                  className={`flex items-center gap-2 px-3 py-1 rounded-full text-sm font-medium ${theme.light}`}
                 >
+                  <FiBookmark className={theme.icon} />
                   {tag}
                 </span>
               ))}
