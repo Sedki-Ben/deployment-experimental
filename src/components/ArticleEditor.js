@@ -247,7 +247,7 @@ const RichTextEditor = ({ content, onChange, placeholder, className = "", dir })
   );
 };
 
-const ContentBlock = ({ block, onUpdate, onDelete, index, dir }) => {
+const ContentBlock = ({ block, onUpdate, onDelete, index, dir, currentLanguage }) => {
   const [draggedImageIndex, setDraggedImageIndex] = useState(null);
 
   const handleContentChange = (content) => {
@@ -270,7 +270,7 @@ const ContentBlock = ({ block, onUpdate, onDelete, index, dir }) => {
     const newImages = files.map(file => ({
       file,
       url: URL.createObjectURL(file),
-      captions: {},
+      caption: '',
       alignment: 'center',
       size: 'medium'
     }));
@@ -306,7 +306,7 @@ const ContentBlock = ({ block, onUpdate, onDelete, index, dir }) => {
     return 'w-full';
   };
 
-  const getCurrentLanguageInfo = () => languages.find(lang => lang.code === 'en');
+  const getCurrentLanguageInfo = () => languages.find(lang => lang.code === currentLanguage);
 
   const renderBlockContent = () => {
     switch (block.type) {
@@ -1083,7 +1083,8 @@ const ArticleEditor = ({ onSave, onCancel, initialData = {}, loading = false, er
                   index={index}
                   onUpdate={handleBlockUpdate}
                   onDelete={handleBlockDelete}
-                    dir={currentLangInfo.dir}
+                  dir={currentLangInfo.dir}
+                  currentLanguage={currentLanguage}
                 />
               </div>
             </div>
