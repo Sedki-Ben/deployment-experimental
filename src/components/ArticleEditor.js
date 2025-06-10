@@ -621,6 +621,9 @@ const ArticleEditor = ({ onSave, onCancel, initialData = {}, loading = false, er
   const [showPreview, setShowPreview] = useState(false);
   const [draggedBlockIndex, setDraggedBlockIndex] = useState(null);
 
+  // Ref for file input
+  const fileInputRef = useRef(null);
+
   // Permission check
   const hasPermission = ['writer', 'admin'].includes(userRole);
 
@@ -942,6 +945,15 @@ const ArticleEditor = ({ onSave, onCancel, initialData = {}, loading = false, er
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
               Main Article Image
             </label>
+            {/* Hidden file input - always present */}
+            <input
+              type="file"
+              accept="image/*"
+              className="hidden"
+              onChange={handleMainImageChange}
+              disabled={loading}
+              ref={fileInputRef}
+            />
             <div className="relative">
               {mainImage ? (
                 <div className="relative group">
@@ -960,36 +972,31 @@ const ArticleEditor = ({ onSave, onCancel, initialData = {}, loading = false, er
                     type="button"
                     onClick={() => setMainImage(null)}
                     className="absolute top-2 right-2 bg-red-500 text-white p-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+                    title="Remove image"
                   >
                     <FiX className="w-4 h-4" />
                   </button>
                   <button
                     type="button"
-                    onClick={() => document.getElementById('main-image-upload').click()}
+                    onClick={() => fileInputRef.current?.click()}
                     className="absolute bottom-2 right-2 bg-blue-500 text-white px-3 py-1 rounded-lg text-sm opacity-0 group-hover:opacity-100 transition-opacity"
+                    title="Change image"
                   >
                     Change Image
                   </button>
                 </div>
               ) : (
                 <div className="border-2 border-dashed border-blue-300 dark:border-blue-700 rounded-lg p-6 text-center">
-                  <input
-                    type="file"
-                    accept="image/*"
-                    className="hidden"
-                    onChange={handleMainImageChange}
-                    disabled={loading}
-                    id="main-image-upload"
-                  />
-                  <label
-                    htmlFor="main-image-upload"
-                    className="flex flex-col items-center cursor-pointer"
+                  <button
+                    type="button"
+                    onClick={() => fileInputRef.current?.click()}
+                    className="flex flex-col items-center cursor-pointer w-full"
                   >
                     <FiImage className="w-8 h-8 text-blue-500 mb-2" />
                     <span className="text-gray-600 dark:text-gray-300">
                       Upload main article image
                     </span>
-                  </label>
+                  </button>
                 </div>
               )}
             </div>
