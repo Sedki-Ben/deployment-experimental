@@ -219,6 +219,12 @@ exports.getArticle = async (req, res) => {
 // Update article
 exports.updateArticle = async (req, res) => {
     try {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            console.log('Validation errors:', errors.array());
+            return res.status(400).json({ errors: errors.array() });
+        }
+
         const article = await Article.findById(req.params.id);
 
         if (!article) {
@@ -230,31 +236,86 @@ exports.updateArticle = async (req, res) => {
             return res.status(403).json({ message: 'Not authorized' });
         }
 
-        const updateData = { ...req.body };
-        
-        // Handle translations if provided as JSON string
-        if (typeof updateData.translations === 'string') {
-            updateData.translations = JSON.parse(updateData.translations);
+        console.log('Update request body:', req.body);
+        console.log('Update request files:', req.files);
+
+        const updateData = {};
+
+        // Handle translations if provided
+        if (req.body.translations) {
+            updateData.translations = typeof req.body.translations === 'string' 
+                ? JSON.parse(req.body.translations) 
+                : req.body.translations;
+            
+            // Process content images for translations if new content images were uploaded
+            const contentImages = req.files?.contentImages || [];
+            if (contentImages.length > 0 && updateData.translations) {
+                let globalImageIndex = 0;
+                const languages = ['en', 'fr', 'ar'];
+                
+                languages.forEach(lang => {
+                    if (updateData.translations[lang] && updateData.translations[lang].content) {
+                        updateData.translations[lang].content = updateData.translations[lang].content.map(block => {
+                            if (block.type === 'image-group' && block.metadata?.images) {
+                                block.metadata.images = block.metadata.images.map(img => {
+                                    // Replace blob URL with server URL for new uploads
+                                    if (img.url && img.url.startsWith('blob:') && globalImageIndex < contentImages.length) {
+                                        return {
+                                            ...img,
+                                            url: `/uploads/${contentImages[globalImageIndex++].filename}`
+                                        };
+                                    }
+                                    return img;
+                                });
+                            }
+                            return block;
+                        });
+                    }
+                });
+            }
         }
 
-        // Handle tags if provided as JSON string
-        if (typeof updateData.tags === 'string') {
-            updateData.tags = JSON.parse(updateData.tags);
+        // Handle tags if provided
+        if (req.body.tags) {
+            updateData.tags = typeof req.body.tags === 'string' 
+                ? JSON.parse(req.body.tags) 
+                : req.body.tags;
         }
 
-        // Handle image upload
-        if (req.file) {
-            updateData.image = `/uploads/${req.file.filename}`;
+        // Handle category if provided
+        if (req.body.category) {
+            updateData.category = req.body.category;
+        }
+
+        // Handle status if provided
+        if (req.body.status) {
+            updateData.status = req.body.status;
+            // Set publishedAt if status is being changed to published
+            if (req.body.status === 'published' && article.status !== 'published') {
+                updateData.publishedAt = new Date();
+            }
+        }
+
+        // Handle main image upload
+        const mainImage = req.files?.image?.[0];
+        if (mainImage) {
+            updateData.image = `/uploads/${mainImage.filename}`;
         } else if (req.body.existingImage) {
             // Keep existing image if no new file uploaded
             updateData.image = req.body.existingImage;
         }
+
+        console.log('Update data:', updateData);
 
         const updatedArticle = await Article.findByIdAndUpdate(
             req.params.id,
             updateData,
             { new: true, runValidators: true }
         ).populate('author', 'name email');
+
+        if (!updatedArticle) {
+            return res.status(404).json({ message: 'Article not found after update' });
+        }
 
         res.json(updatedArticle);
     } catch (error) {
