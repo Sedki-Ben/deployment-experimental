@@ -552,21 +552,43 @@ function Article({ article }) {
           )}
         </div>
 
-        {/* Article Tags - Match Category Indicator Style */}
-        {articleData.tags && articleData.tags.length > 0 && (
-          <div className={`mt-8 pt-4 border-t ${theme.border} opacity-30`}>
-            <div className={`flex flex-wrap gap-2 mb-2 ${isRTL ? 'flex-row-reverse' : ''}`}>
-              {articleData.tags.map((tag, index) => (
-                <span
-                  key={index}
-                  className={`px-3 py-1 rounded-full text-sm font-medium ${theme.light}`}
-                >
-                  {tag}
-                </span>
-              ))}
+        {/* Article Footer with Tags */}
+        <div className={`mt-20 relative`}>
+          {/* Thin Colored Separator */}
+          <div 
+            className="w-full h-px mb-6 opacity-50" 
+            style={{
+              backgroundColor: theme.icon.includes('red') ? '#ef4444' :
+                             theme.icon.includes('green') ? '#22c55e' :
+                             theme.icon.includes('purple') ? '#a855f7' :
+                             theme.icon.includes('yellow') ? '#eab308' :
+                             '#6b7280'
+            }}
+          ></div>
+
+          {articleData.tags && articleData.tags.length > 0 && (
+            <div className="mb-2">
+              <div className={`flex flex-wrap gap-3 ${isRTL ? 'flex-row-reverse justify-end' : 'justify-start'}`}>
+                {articleData.tags.map((tag, index) => (
+                  <span
+                    key={index}
+                    className={`
+                      group relative px-4 py-2 rounded-full text-sm font-semibold 
+                      transition-all duration-300 cursor-pointer transform hover:scale-105 
+                      shadow-sm hover:shadow-md
+                      before:absolute before:inset-0 before:rounded-full before:opacity-0 before:transition-opacity before:duration-300
+                      hover:before:opacity-20 active:scale-95
+                      ${theme.light}
+                    `}
+                  >
+                    {/* Tag Text */}
+                    <span className="relative z-10">{tag}</span>
+                  </span>
+                ))}
+              </div>
             </div>
-          </div>
-        )}
+          )}
+        </div>
 
       </div>
 
