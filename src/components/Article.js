@@ -195,6 +195,72 @@ function Article({ article }) {
     }
   };
 
+  // Get category-specific theme
+  const getCategoryTheme = () => {
+    const category = articleData.category;
+    switch (category) {
+      case 'etoile-du-sahel':
+        return {
+          solid: 'bg-red-500',
+          gradient: 'from-red-500 to-red-600'
+        };
+      case 'the-beautiful-game':
+        return {
+          solid: 'bg-green-500',
+          gradient: 'from-green-500 to-green-600'
+        };
+      case 'all-sports-hub':
+        return {
+          solid: 'bg-purple-500',
+          gradient: 'from-purple-500 to-purple-600'
+        };
+      default:
+        return {
+          solid: 'bg-gray-500',
+          gradient: 'from-gray-500 to-gray-600'
+        };
+    }
+  };
+
+  // Get category-specific tag colors
+  const getCategoryTagColors = () => {
+    const category = articleData.category;
+    switch (category) {
+      case 'etoile-du-sahel':
+        return {
+          background: 'bg-red-50 dark:bg-red-900/20',
+          text: 'text-red-700 dark:text-red-300',
+          hover: 'hover:bg-red-100 dark:hover:bg-red-900/30',
+          border: 'border-red-300 dark:border-red-600',
+          gradient: 'rgba(239, 68, 68, 0.1), rgba(220, 38, 38, 0.2)'
+        };
+      case 'the-beautiful-game':
+        return {
+          background: 'bg-green-50 dark:bg-green-900/20',
+          text: 'text-green-700 dark:text-green-300',
+          hover: 'hover:bg-green-100 dark:hover:bg-green-900/30',
+          border: 'border-green-300 dark:border-green-600',
+          gradient: 'rgba(34, 197, 94, 0.1), rgba(22, 163, 74, 0.2)'
+        };
+      case 'all-sports-hub':
+        return {
+          background: 'bg-purple-50 dark:bg-purple-900/20',
+          text: 'text-purple-700 dark:text-purple-300',
+          hover: 'hover:bg-purple-100 dark:hover:bg-purple-900/30',
+          border: 'border-purple-300 dark:border-purple-600',
+          gradient: 'rgba(168, 85, 247, 0.1), rgba(147, 51, 234, 0.2)'
+        };
+      default:
+        return {
+          background: 'bg-gray-50 dark:bg-gray-900/20',
+          text: 'text-gray-700 dark:text-gray-300',
+          hover: 'hover:bg-gray-100 dark:hover:bg-gray-900/30',
+          border: 'border-gray-300 dark:border-gray-600',
+          gradient: 'rgba(107, 114, 128, 0.1), rgba(75, 85, 99, 0.2)'
+        };
+    }
+  };
+
   // Get current language content or fallback to English
   const getCurrentLanguageContent = () => {
     const currentLang = i18n.language;
@@ -525,23 +591,47 @@ function Article({ article }) {
           )}
         </div>
 
-        {/* Article Footer with Tags */}
-        <div className={`mt-12 pt-6 border-t ${theme.border} opacity-30`}>
+        {/* Article Footer with Enhanced Tags */}
+        <div className={`mt-12 pt-8 border-t ${theme.border} opacity-20`}>
           {article.tags && article.tags.length > 0 && (
-            <div className="mb-6">
-              <h3 className={`text-lg font-semibold mb-4 ${theme.icon} ${isRTL ? 'text-right' : 'text-left'}`}>
-                {t('Tags')}
-              </h3>
-              <div className={`flex flex-wrap gap-2 ${isRTL ? 'flex-row-reverse' : ''}`}>
-                {article.tags.map((tag, index) => (
-                  <span
-                    key={index}
-                    className={`px-3 py-1 rounded-full text-sm font-medium transition-colors cursor-pointer ${theme.light} ${theme.hover}`}
-                  >
-                    #{tag}
-                  </span>
-                ))}
+            <div className="mb-8">
+              <div className={`flex items-center gap-3 mb-6 ${isRTL ? 'flex-row-reverse' : ''}`}>
+                <div className={`w-1 h-6 rounded-full ${getCategoryTheme().solid}`}></div>
+                <h3 className={`text-lg font-bold ${theme.icon} ${isRTL ? 'text-right' : 'text-left'}`}>
+                  {t('Related Topics')}
+                </h3>
               </div>
+              
+              <div className={`flex flex-wrap gap-3 ${isRTL ? 'flex-row-reverse' : ''}`}>
+                {article.tags.map((tag, index) => {
+                  const categoryColors = getCategoryTagColors();
+                  return (
+                    <span
+                      key={index}
+                      className={`group relative px-4 py-2 rounded-lg text-sm font-semibold 
+                        transition-all duration-300 cursor-pointer transform hover:scale-105 hover:shadow-lg
+                        ${categoryColors.background} ${categoryColors.text} ${categoryColors.hover}`}
+                      style={{
+                        background: `linear-gradient(135deg, ${categoryColors.gradient})`
+                      }}
+                    >
+                      <span className="relative z-10 flex items-center gap-1">
+                        <span className="text-xs opacity-70">#</span>
+                        {tag}
+                      </span>
+                      
+                      {/* Subtle hover effect overlay */}
+                      <div className="absolute inset-0 rounded-lg bg-white dark:bg-black opacity-0 group-hover:opacity-10 transition-opacity duration-300"></div>
+                      
+                      {/* Animated border */}
+                      <div className={`absolute inset-0 rounded-lg border-2 ${categoryColors.border} opacity-0 group-hover:opacity-50 transition-opacity duration-300`}></div>
+                    </span>
+                  );
+                })}
+              </div>
+              
+              {/* Decorative bottom accent */}
+              <div className={`mt-6 h-1 w-24 rounded-full ${getCategoryTheme().solid} opacity-30 ${isRTL ? 'mr-auto' : 'ml-auto'}`}></div>
             </div>
           )}
         </div>
