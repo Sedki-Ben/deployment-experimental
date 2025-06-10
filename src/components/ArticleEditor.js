@@ -624,6 +624,56 @@ const ArticleEditor = ({ onSave, onCancel, initialData = {}, loading = false, er
   // Permission check
   const hasPermission = ['writer', 'admin'].includes(userRole);
 
+  // Initialize data when initialData changes (for editing existing articles)
+  useEffect(() => {
+    if (initialData && Object.keys(initialData).length > 0) {
+      // Handle translation data structure
+      if (initialData.translations) {
+        // Set titles from translations
+        const newTitles = {};
+        const newContentBlocks = {};
+        
+        languages.forEach(lang => {
+          if (initialData.translations[lang.code]) {
+            newTitles[lang.code] = initialData.translations[lang.code].title || '';
+            newContentBlocks[lang.code] = initialData.translations[lang.code].content || [];
+          } else {
+            newTitles[lang.code] = '';
+            newContentBlocks[lang.code] = [];
+          }
+        });
+        
+        setTitles(newTitles);
+        setContentBlocks(newContentBlocks);
+      } else {
+        // Fallback for legacy data structure
+        setTitles({
+          en: initialData?.titles?.en || initialData?.title || '',
+          fr: initialData?.titles?.fr || '',
+          ar: initialData?.titles?.ar || ''
+        });
+        setContentBlocks({
+          en: initialData?.content?.en || initialData?.content || [],
+          fr: initialData?.content?.fr || [],
+          ar: initialData?.content?.ar || []
+        });
+      }
+      
+      // Set other fields
+      if (initialData.image) {
+        setMainImage(initialData.image);
+      }
+      
+      if (initialData.tags) {
+        setTags(Array.isArray(initialData.tags) ? initialData.tags.join(', ') : initialData.tags);
+      }
+      
+      if (initialData.category || initialData.type) {
+        setType(initialData.category || initialData.type);
+      }
+    }
+  }, [initialData]);
+
   const getCurrentLanguageInfo = () => languages.find(lang => lang.code === currentLanguage);
 
   const handleMainImageChange = (e) => {
@@ -633,10 +683,21 @@ const ArticleEditor = ({ onSave, onCancel, initialData = {}, loading = false, er
         setLocalError('Main image size should be less than 5MB.');
         return;
       }
-      setMainImage({
+      
+      // Always create a new image object when user selects a new file
+      const newImage = {
         file,
-        preview: URL.createObjectURL(file)
-      });
+        preview: URL.createObjectURL(file),
+        isNew: true // Flag to indicate this is a new upload
+      };
+      
+      // Clean up previous preview URL if it exists
+      if (mainImage && mainImage.preview && mainImage.isNew) {
+        URL.revokeObjectURL(mainImage.preview);
+      }
+      
+      setMainImage(newImage);
+      setLocalError(''); // Clear any previous errors
     }
   };
 
@@ -777,7 +838,14 @@ const ArticleEditor = ({ onSave, onCancel, initialData = {}, loading = false, er
     // Add main image
     if (mainImage?.file) {
       formData.append('image', mainImage.file);
+    } else if (mainImage?.isNew && mainImage?.file) {
+      // New image uploaded during editing
+      formData.append('image', mainImage.file);
     } else if (typeof mainImage === 'string') {
+      // Existing image URL - keep the existing image
+      formData.append('existingImage', mainImage);
+    } else if (mainImage && !mainImage.file && !mainImage.isNew) {
+      // Existing image object structure
       formData.append('existingImage', mainImage);
     }
     
@@ -878,7 +946,13 @@ const ArticleEditor = ({ onSave, onCancel, initialData = {}, loading = false, er
               {mainImage ? (
                 <div className="relative group">
                   <img
-                    src={typeof mainImage === 'string' ? mainImage : mainImage.preview}
+                    src={
+                      typeof mainImage === 'string' 
+                        ? mainImage 
+                        : mainImage.preview || mainImage.file 
+                          ? URL.createObjectURL(mainImage.file) 
+                          : mainImage
+                    }
                     alt="Main article"
                     className="w-full h-64 object-cover rounded-lg"
                   />
@@ -888,6 +962,13 @@ const ArticleEditor = ({ onSave, onCancel, initialData = {}, loading = false, er
                     className="absolute top-2 right-2 bg-red-500 text-white p-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
                   >
                     <FiX className="w-4 h-4" />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => document.getElementById('main-image-upload').click()}
+                    className="absolute bottom-2 right-2 bg-blue-500 text-white px-3 py-1 rounded-lg text-sm opacity-0 group-hover:opacity-100 transition-opacity"
+                  >
+                    Change Image
                   </button>
                 </div>
               ) : (

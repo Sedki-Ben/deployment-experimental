@@ -1,6 +1,7 @@
 import axios from 'axios';
 
-const BASE_URL = '/api/analytics';
+const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
+const BASE_URL = `${API_BASE_URL}/analytics`;
 
 export const analytics = {
     // Track article view
