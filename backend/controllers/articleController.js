@@ -4,6 +4,32 @@ const { Subscription } = require('../models/Newsletter');
 const EmailService = require('../utils/emailService');
 const User = require('../models/User');
 const mongoose = require('mongoose');
+const path = require('path');
+const fs = require('fs');
+
+// Helper function to save uploaded file from memory to disk
+const saveUploadedFile = async (file) => {
+    try {
+        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+        const filename = uniqueSuffix + '-' + file.originalname;
+        
+        // Create uploads directory if it doesn't exist
+        const uploadDir = path.join(__dirname, '..', 'uploads');
+        if (!fs.existsSync(uploadDir)) {
+            fs.mkdirSync(uploadDir, { recursive: true });
+        }
+        
+        const filepath = path.join(uploadDir, filename);
+        
+        // Write buffer to file
+        await fs.promises.writeFile(filepath, file.buffer);
+        
+        return filename;
+    } catch (error) {
+        console.error('Error saving file:', error);
+        throw new Error('Failed to save uploaded file');
+    }
+};
 
 // Create article
 exports.createArticle = async (req, res) => {
@@ -47,12 +73,15 @@ exports.createArticle = async (req, res) => {
             });
         }
 
-        // Create a mapping of temporary blob URLs to actual uploaded files
-        const imageMapping = {};
-        contentImages.forEach((file, index) => {
-            // We'll map based on the order they were uploaded
-            imageMapping[`contentImage_${index}`] = `/uploads/${file.filename}`;
-        });
+        // Save main image to disk and get filename
+        const mainImageFilename = await saveUploadedFile(mainImage);
+
+        // Save content images to disk and create mapping
+        const savedContentImages = [];
+        for (const file of contentImages) {
+            const filename = await saveUploadedFile(file);
+            savedContentImages.push({ filename, originalname: file.originalname });
+        }
 
         // Process content blocks to replace blob URLs with server URLs for ALL languages
         let globalImageIndex = 0;
@@ -64,10 +93,10 @@ exports.createArticle = async (req, res) => {
                     if (block.type === 'image-group' && block.metadata?.images) {
                         block.metadata.images = block.metadata.images.map(img => {
                             // Replace blob URL with server URL
-                            if (img.url && img.url.startsWith('blob:') && globalImageIndex < contentImages.length) {
+                            if (img.url && img.url.startsWith('blob:') && globalImageIndex < savedContentImages.length) {
                                 return {
                                     ...img,
-                                    url: `/uploads/${contentImages[globalImageIndex++].filename}`
+                                    url: `/uploads/${savedContentImages[globalImageIndex++].filename}`
                                 };
                             }
                             return img;
@@ -87,7 +116,7 @@ exports.createArticle = async (req, res) => {
             author: req.user.id,
             // Use user's profile image if available, otherwise use default
             authorImage: user.profileImage || '/uploads/profile/bild3.jpg',
-            image: `/uploads/${mainImage.filename}`,
+            image: `/uploads/${mainImageFilename}`,
             // Initialize counters to 0 for dynamic functionality
             likes: { count: 0, users: [] },
             views: 0,
@@ -250,6 +279,13 @@ exports.updateArticle = async (req, res) => {
             // Process content images for translations if new content images were uploaded
             const contentImages = req.files?.contentImages || [];
             if (contentImages.length > 0 && updateData.translations) {
+                // Save content images to disk
+                const savedContentImages = [];
+                for (const file of contentImages) {
+                    const filename = await saveUploadedFile(file);
+                    savedContentImages.push({ filename, originalname: file.originalname });
+                }
+
                 let globalImageIndex = 0;
                 const languages = ['en', 'fr', 'ar'];
                 
@@ -259,10 +295,10 @@ exports.updateArticle = async (req, res) => {
                             if (block.type === 'image-group' && block.metadata?.images) {
                                 block.metadata.images = block.metadata.images.map(img => {
                                     // Replace blob URL with server URL for new uploads
-                                    if (img.url && img.url.startsWith('blob:') && globalImageIndex < contentImages.length) {
+                                    if (img.url && img.url.startsWith('blob:') && globalImageIndex < savedContentImages.length) {
                                         return {
                                             ...img,
-                                            url: `/uploads/${contentImages[globalImageIndex++].filename}`
+                                            url: `/uploads/${savedContentImages[globalImageIndex++].filename}`
                                         };
                                     }
                                     return img;
@@ -299,7 +335,8 @@ exports.updateArticle = async (req, res) => {
         // Handle main image upload
         const mainImage = req.files?.image?.[0];
         if (mainImage) {
-            updateData.image = `/uploads/${mainImage.filename}`;
+            const mainImageFilename = await saveUploadedFile(mainImage);
+            updateData.image = `/uploads/${mainImageFilename}`;
         } else if (req.body.existingImage) {
             // Keep existing image if no new file uploaded
             updateData.image = req.body.existingImage;
