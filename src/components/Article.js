@@ -195,33 +195,6 @@ function Article({ article }) {
     }
   };
 
-  // Get category-specific theme
-  const getCategoryTheme = () => {
-    const category = articleData.category;
-    switch (category) {
-      case 'etoile-du-sahel':
-        return {
-          solid: 'bg-red-500',
-          gradient: 'from-red-500 to-red-600'
-        };
-      case 'the-beautiful-game':
-        return {
-          solid: 'bg-green-500',
-          gradient: 'from-green-500 to-green-600'
-        };
-      case 'all-sports-hub':
-        return {
-          solid: 'bg-purple-500',
-          gradient: 'from-purple-500 to-purple-600'
-        };
-      default:
-        return {
-          solid: 'bg-gray-500',
-          gradient: 'from-gray-500 to-gray-600'
-        };
-    }
-  };
-
   // Get current language content or fallback to English
   const getCurrentLanguageContent = () => {
     const currentLang = i18n.language;
@@ -566,10 +539,10 @@ function Article({ article }) {
             }}
           ></div>
 
-          {articleData.tags && articleData.tags.length > 0 && (
+          {article.tags && article.tags.length > 0 && (
             <div className="mb-2">
               <div className={`flex flex-wrap gap-3 ${isRTL ? 'flex-row-reverse justify-end' : 'justify-start'}`}>
-                {articleData.tags.map((tag, index) => (
+                {article.tags.map((tag, index) => (
                   <span
                     key={index}
                     className={`
