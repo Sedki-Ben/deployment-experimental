@@ -165,7 +165,11 @@ function Archive() {
                       {categoryTranslations[article.category]?.[i18n.language] || article.category}
                     </span>
                     <span className="text-gray-600 dark:text-gray-400">
-                      {article.date}
+                      {new Date(article.publishedAt || article.date).toLocaleDateString(i18n.language === 'ar' ? 'ar-EG' : i18n.language === 'fr' ? 'fr-FR' : 'en-US', {
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric'
+                      })}
                     </span>
                   </div>
                   

@@ -593,7 +593,7 @@ function Article({ article }) {
 
         {/* Article Footer with Enhanced Tags */}
         <div className={`mt-12 pt-8 border-t ${theme.border} opacity-20`}>
-          {article.tags && article.tags.length > 0 && (
+          {articleData.tags && articleData.tags.length > 0 && (
             <div className="mb-8">
               <div className={`flex items-center gap-3 mb-6 ${isRTL ? 'flex-row-reverse' : ''}`}>
                 <div className={`w-1 h-6 rounded-full ${getCategoryTheme().solid}`}></div>
@@ -603,7 +603,7 @@ function Article({ article }) {
               </div>
               
               <div className={`flex flex-wrap gap-3 ${isRTL ? 'flex-row-reverse' : ''}`}>
-                {article.tags.map((tag, index) => {
+                {articleData.tags.map((tag, index) => {
                   const categoryColors = getCategoryTagColors();
                   return (
                     <span

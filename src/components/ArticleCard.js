@@ -96,6 +96,17 @@ const ArticleCard = ({ article, variant = 'default' }) => {
           {localizedContent?.excerpt}
         </p>
 
+        {/* Publishing Date */}
+        <div className="mb-3">
+          <span className={`text-xs ${theme.text} font-medium`}>
+            {new Date(article.publishedAt || article.date).toLocaleDateString(i18n.language === 'ar' ? 'ar-EG' : i18n.language === 'fr' ? 'fr-FR' : 'en-US', {
+              year: 'numeric',
+              month: 'long',
+              day: 'numeric'
+            })}
+          </span>
+        </div>
+
         {/* Meta information */}
         <div className={`flex items-center justify-between ${isRTL ? 'flex-row-reverse' : ''}`}>
           <div className={`flex items-center ${isRTL ? 'space-x-reverse space-x-2' : 'space-x-2'}`}>
