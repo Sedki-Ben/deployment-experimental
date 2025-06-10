@@ -222,45 +222,6 @@ function Article({ article }) {
     }
   };
 
-  // Get category-specific tag colors
-  const getCategoryTagColors = () => {
-    const category = articleData.category;
-    switch (category) {
-      case 'etoile-du-sahel':
-        return {
-          background: 'bg-red-600 dark:bg-red-500',
-          text: 'text-white dark:text-white',
-          hover: 'hover:bg-red-700 dark:hover:bg-red-600',
-          border: 'border-red-600 dark:border-red-500',
-          gradient: 'rgba(220, 38, 38, 0.9), rgba(185, 28, 28, 1)'
-        };
-      case 'the-beautiful-game':
-        return {
-          background: 'bg-green-600 dark:bg-green-500',
-          text: 'text-white dark:text-white',
-          hover: 'hover:bg-green-700 dark:hover:bg-green-600',
-          border: 'border-green-600 dark:border-green-500',
-          gradient: 'rgba(22, 163, 74, 0.9), rgba(21, 128, 61, 1)'
-        };
-      case 'all-sports-hub':
-        return {
-          background: 'bg-purple-600 dark:bg-purple-500',
-          text: 'text-white dark:text-white',
-          hover: 'hover:bg-purple-700 dark:hover:bg-purple-600',
-          border: 'border-purple-600 dark:border-purple-500',
-          gradient: 'rgba(147, 51, 234, 0.9), rgba(126, 34, 206, 1)'
-        };
-      default:
-        return {
-          background: 'bg-gray-600 dark:bg-gray-500',
-          text: 'text-white dark:text-white',
-          hover: 'hover:bg-gray-700 dark:hover:bg-gray-600',
-          border: 'border-gray-600 dark:border-gray-500',
-          gradient: 'rgba(75, 85, 99, 0.9), rgba(55, 65, 81, 1)'
-        };
-    }
-  };
-
   // Get current language content or fallback to English
   const getCurrentLanguageContent = () => {
     const currentLang = i18n.language;
@@ -595,17 +556,14 @@ function Article({ article }) {
         {articleData.tags && articleData.tags.length > 0 && (
           <div className={`mt-8 pt-4 border-t ${theme.border} opacity-30`}>
             <div className={`flex flex-wrap gap-2 mb-2 ${isRTL ? 'flex-row-reverse' : ''}`}>
-              {articleData.tags.map((tag, index) => {
-                const categoryColors = getCategoryTagColors();
-                return (
-                  <span
-                    key={index}
-                    className={`px-3 py-1 rounded-full text-xs font-medium ${categoryColors.background} ${categoryColors.text}`}
-                  >
-                    {tag}
-                  </span>
-                );
-              })}
+              {articleData.tags.map((tag, index) => (
+                <span
+                  key={index}
+                  className={`px-3 py-1 rounded-full text-xs font-medium transition-colors duration-200 ${theme.light}`}
+                >
+                  {tag}
+                </span>
+              ))}
             </div>
           </div>
         )}
