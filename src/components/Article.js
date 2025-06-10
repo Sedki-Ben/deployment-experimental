@@ -559,9 +559,8 @@ function Article({ article }) {
               {articleData.tags.map((tag, index) => (
                 <span
                   key={index}
-                  className={`flex items-center gap-2 px-3 py-1 rounded-full text-sm font-medium ${theme.light}`}
+                  className={`px-3 py-1 rounded-full text-sm font-medium ${theme.light}`}
                 >
-                  <FiBookmark className={theme.icon} />
                   {tag}
                 </span>
               ))}
