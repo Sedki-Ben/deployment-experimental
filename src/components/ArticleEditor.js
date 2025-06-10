@@ -270,7 +270,7 @@ const ContentBlock = ({ block, onUpdate, onDelete, index, dir }) => {
     const newImages = files.map(file => ({
       file,
       url: URL.createObjectURL(file),
-      caption: '',
+      captions: {},
       alignment: 'center',
       size: 'medium'
     }));
@@ -305,6 +305,8 @@ const ContentBlock = ({ block, onUpdate, onDelete, index, dir }) => {
     if (imageCount === 3) return 'w-1/3';
     return 'w-full';
   };
+
+  const getCurrentLanguageInfo = () => languages.find(lang => lang.code === 'en');
 
   const renderBlockContent = () => {
     switch (block.type) {
@@ -383,7 +385,7 @@ const ContentBlock = ({ block, onUpdate, onDelete, index, dir }) => {
                 {images.map((img, imgIndex) => (
                   <div
                     key={imgIndex}
-                    className={`relative group ${getImageLayoutClass(images.length, imgIndex)}`}
+                    className={`relative group ${getImageLayoutClass(images.length, imgIndex)} border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden`}
                     draggable
                     onDragStart={() => setDraggedImageIndex(imgIndex)}
                     onDragOver={(e) => e.preventDefault()}
@@ -398,57 +400,90 @@ const ContentBlock = ({ block, onUpdate, onDelete, index, dir }) => {
                     <img
                       src={img.url}
                       alt=""
-                      className={`w-full object-cover rounded-lg cursor-move ${
+                      className={`w-full object-cover cursor-move ${
                         img.size === 'small' ? 'h-32' : 
                         img.size === 'large' ? 'h-64' : 'h-48'
                       }`}
                     />
                     
-                    {/* Image Controls */}
-                    <div className="absolute top-2 right-2 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                      <button
-                        type="button"
-                        onClick={() => removeImage(imgIndex)}
-                        className="bg-red-500 text-white p-1 rounded-full"
-                      >
-                        <FiX className="w-3 h-3" />
-                      </button>
+                    {/* Top Controls Bar */}
+                    <div className="absolute top-0 left-0 right-0 bg-black/50 backdrop-blur-sm p-2 opacity-0 group-hover:opacity-100 transition-all duration-200">
+                      <div className="flex justify-between items-center">
+                        {/* Size Controls */}
+                        <div className="flex gap-1">
+                          <button
+                            type="button"
+                            onClick={() => updateImage(imgIndex, { size: 'small' })}
+                            className={`px-2 py-1 text-xs rounded font-medium transition-colors ${
+                              img.size === 'small' 
+                                ? 'bg-blue-500 text-white shadow-sm' 
+                                : 'bg-white/90 text-gray-700 hover:bg-white'
+                            }`}
+                            title="Small size"
+                          >
+                            S
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => updateImage(imgIndex, { size: 'medium' })}
+                            className={`px-2 py-1 text-xs rounded font-medium transition-colors ${
+                              img.size === 'medium' 
+                                ? 'bg-blue-500 text-white shadow-sm' 
+                                : 'bg-white/90 text-gray-700 hover:bg-white'
+                            }`}
+                            title="Medium size"
+                          >
+                            M
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => updateImage(imgIndex, { size: 'large' })}
+                            className={`px-2 py-1 text-xs rounded font-medium transition-colors ${
+                              img.size === 'large' 
+                                ? 'bg-blue-500 text-white shadow-sm' 
+                                : 'bg-white/90 text-gray-700 hover:bg-white'
+                            }`}
+                            title="Large size"
+                          >
+                            L
+                          </button>
+                        </div>
+                        
+                        {/* Remove Button */}
+                        <button
+                          type="button"
+                          onClick={() => removeImage(imgIndex)}
+                          className="bg-red-500 hover:bg-red-600 text-white p-1 rounded-full transition-colors"
+                          title="Remove image"
+                        >
+                          <FiX className="w-3 h-3" />
+                        </button>
+                      </div>
                     </div>
 
-                    {/* Size Controls */}
-                    <div className="absolute bottom-2 left-2 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                      <button
-                        type="button"
-                        onClick={() => updateImage(imgIndex, { size: 'small' })}
-                        className={`px-2 py-1 text-xs rounded ${img.size === 'small' ? 'bg-blue-500 text-white' : 'bg-white/80 text-blue-500'}`}
-                      >
-                        S
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => updateImage(imgIndex, { size: 'medium' })}
-                        className={`px-2 py-1 text-xs rounded ${img.size === 'medium' ? 'bg-blue-500 text-white' : 'bg-white/80 text-blue-500'}`}
-                      >
-                        M
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => updateImage(imgIndex, { size: 'large' })}
-                        className={`px-2 py-1 text-xs rounded ${img.size === 'large' ? 'bg-blue-500 text-white' : 'bg-white/80 text-blue-500'}`}
-                      >
-                        L
-                      </button>
+                    {/* Caption Input - Now outside the image to avoid overlap */}
+                    <div className="p-3 bg-gray-50 dark:bg-gray-800">
+                      <input
+                        type="text"
+                        placeholder={`Caption (${getCurrentLanguageInfo()?.name || 'Current language'})`}
+                        value={img.captions?.[currentLanguage] || img.caption || ''}
+                        onChange={(e) => {
+                          // Store captions per language
+                          const newCaptions = img.captions || {};
+                          newCaptions[currentLanguage] = e.target.value;
+                          updateImage(imgIndex, { 
+                            captions: newCaptions,
+                            // Keep backward compatibility with old caption field
+                            caption: currentLanguage === 'en' ? e.target.value : (img.caption || '')
+                          });
+                        }}
+                        className="w-full px-3 py-2 text-sm rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
+                        dir={dir}
+                      />
+                      <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                        Caption for {getCurrentLanguageInfo()?.name || currentLanguage.toUpperCase()}
+                      </div>
                     </div>
-
-                    {/* Caption Input */}
-                    <input
-                      type="text"
-                      placeholder="Caption"
-                      value={img.caption || ''}
-                      onChange={(e) => updateImage(imgIndex, { caption: e.target.value })}
-                      className="mt-2 w-full px-3 py-1 text-sm rounded border border-blue-300 dark:border-blue-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
-                      dir={dir}
-                    />
                   </div>
                 ))}
               </div>
@@ -630,8 +665,12 @@ const ArticleEditor = ({ onSave, onCancel, initialData = {}, loading = false, er
   // Initialize data when initialData changes (for editing existing articles)
   useEffect(() => {
     if (initialData && Object.keys(initialData).length > 0) {
+      console.log('ArticleEditor: Initializing with data:', initialData);
+      
       // Handle translation data structure
       if (initialData.translations) {
+        console.log('ArticleEditor: Found translations structure:', initialData.translations);
+        
         // Set titles from translations
         const newTitles = {};
         const newContentBlocks = {};
@@ -640,15 +679,21 @@ const ArticleEditor = ({ onSave, onCancel, initialData = {}, loading = false, er
           if (initialData.translations[lang.code]) {
             newTitles[lang.code] = initialData.translations[lang.code].title || '';
             newContentBlocks[lang.code] = initialData.translations[lang.code].content || [];
+            console.log(`ArticleEditor: Set ${lang.code} - title: "${newTitles[lang.code]}", content blocks: ${newContentBlocks[lang.code].length}`);
           } else {
             newTitles[lang.code] = '';
             newContentBlocks[lang.code] = [];
+            console.log(`ArticleEditor: No ${lang.code} translation found, setting empty`);
           }
         });
+        
+        console.log('ArticleEditor: Final titles:', newTitles);
+        console.log('ArticleEditor: Final contentBlocks:', newContentBlocks);
         
         setTitles(newTitles);
         setContentBlocks(newContentBlocks);
       } else {
+        console.log('ArticleEditor: No translations structure found, using fallback');
         // Fallback for legacy data structure
         setTitles({
           en: initialData?.titles?.en || initialData?.title || '',

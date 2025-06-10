@@ -412,9 +412,9 @@ function Article({ article }) {
                       }}
 
                     />
-                    {image.caption && (
+                    {((image.captions && image.captions[i18n.language]) || image.caption) && (
                       <p className="text-sm text-gray-600 dark:text-gray-400 text-center">
-                        {image.caption}
+                        {image.captions?.[i18n.language] || image.caption}
                       </p>
                     )}
                   </div>

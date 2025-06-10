@@ -31,18 +31,13 @@ const AdminDashboard = ({ editMode = false }) => {
           
           const transformedData = {
             ...article,
-            titles: {
-              en: article.translations?.en?.title || '',
-              fr: article.translations?.fr?.title || '',
-              ar: article.translations?.ar?.title || ''
-            },
-            content: {
-              en: article.translations?.en?.content || [],
-              fr: article.translations?.fr?.content || [],
-              ar: article.translations?.ar?.content || []
-            },
+            // Keep the original translations structure for the editor
+            translations: article.translations,
+            // Keep the original image as is
             image: fullImageUrl || article.image,
+            // Map category to type for editor compatibility
             type: article.category,
+            // Ensure tags is an array
             tags: article.tags || []
           };
           
