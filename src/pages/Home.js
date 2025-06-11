@@ -4,6 +4,7 @@ import { FiArrowRight, FiStar } from 'react-icons/fi';
 import { GiBoxingGlove } from 'react-icons/gi';
 import { useTranslation } from 'react-i18next';
 import { useArticles, getLocalizedArticleContent } from '../hooks/useArticles';
+import { getImageUrl } from '../utils/imageUtils';
 import Newsletter from '../components/Newsletter';
 
 function Home() {
@@ -173,7 +174,7 @@ function Home() {
                       <Link to={`/article/${featuredEtoile.slug || featuredEtoile.id}`} className="group">
                         <div className="aspect-w-16 aspect-h-9 mb-4">
                           <img
-                            src={featuredEtoile.image}
+                            src={getImageUrl(featuredEtoile.image)}
                             alt={getLocalizedArticleContent(featuredEtoile, i18n.language)?.title}
                             className="w-full h-full object-cover rounded-lg"
                           />
@@ -212,7 +213,7 @@ function Home() {
                         </div>
                         <div className="flex-shrink-0 w-24 h-24">
                           <img
-                            src={article.image}
+                            src={getImageUrl(article.image)}
                             alt={getLocalizedArticleContent(article, i18n.language)?.title}
                             className="w-full h-full object-cover rounded-lg"
                           />
@@ -258,7 +259,7 @@ function Home() {
                       <Link to={`/article/${featuredGame.slug || featuredGame.id}`} className="group">
                         <div className="aspect-w-16 aspect-h-9 mb-4">
                           <img
-                            src={featuredGame.image}
+                            src={getImageUrl(featuredGame.image)}
                             alt={getLocalizedArticleContent(featuredGame, i18n.language)?.title}
                             className="w-full h-full object-cover rounded-lg"
                           />
@@ -297,7 +298,7 @@ function Home() {
                         </div>
                         <div className="flex-shrink-0 w-24 h-24">
                           <img
-                            src={article.image}
+                            src={getImageUrl(article.image)}
                             alt={getLocalizedArticleContent(article, i18n.language)?.title}
                             className="w-full h-full object-cover rounded-lg"
                           />
@@ -343,7 +344,7 @@ function Home() {
                       <Link to={`/article/${featuredSports.slug || featuredSports.id}`} className="group">
                         <div className="aspect-w-16 aspect-h-9 mb-4">
                           <img
-                            src={featuredSports.image}
+                            src={getImageUrl(featuredSports.image)}
                             alt={getLocalizedArticleContent(featuredSports, i18n.language)?.title}
                             className="w-full h-full object-cover rounded-lg"
                           />
@@ -382,7 +383,7 @@ function Home() {
                         </div>
                         <div className="flex-shrink-0 w-24 h-24">
                           <img
-                            src={article.image}
+                            src={getImageUrl(article.image)}
                             alt={getLocalizedArticleContent(article, i18n.language)?.title}
                             className="w-full h-full object-cover rounded-lg"
                           />

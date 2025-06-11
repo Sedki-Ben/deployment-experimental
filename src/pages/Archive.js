@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { FiHeart, FiMessageCircle } from 'react-icons/fi';
 import { useTranslation } from 'react-i18next';
 import { useArticles, getLocalizedArticleContent, categoryTranslations } from '../hooks/useArticles';
+import { getImageUrl } from '../utils/imageUtils';
 import Newsletter from '../components/Newsletter';
 import Pagination from '../components/Pagination';
 
@@ -200,7 +201,7 @@ function Archive() {
                 
                 <div className="flex-shrink-0 w-48 h-32 overflow-hidden rounded-lg">
                   <img
-                    src={article.image}
+                    src={getImageUrl(article.image)}
                     alt={localizedContent.title}
                     className="w-full h-full object-cover"
                   />
