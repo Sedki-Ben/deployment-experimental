@@ -4,6 +4,7 @@ import ArticleEditor from '../components/ArticleEditor';
 import AnalyticsDashboard from '../components/AnalyticsDashboard';
 import { useAuth } from '../contexts/AuthContext';
 import { articles } from '../services/api';
+import { getImageUrl } from '../utils/imageUtils';
 import { FiX, FiEdit3, FiBarChart2, FiArrowLeft } from 'react-icons/fi';
 
 const AdminDashboard = ({ editMode = false }) => {
@@ -25,9 +26,7 @@ const AdminDashboard = ({ editMode = false }) => {
         .then(response => {
           const article = response.data;
           // Transform article data to match ArticleEditor expected format
-          const backendUrl = process.env.REACT_APP_API_URL?.replace('/api', '') || 'http://localhost:5000';
-          const fullImageUrl = article.image?.startsWith('http') ? article.image : 
-                              article.image?.startsWith('/') ? `${backendUrl}${article.image}` : article.image;
+          const fullImageUrl = getImageUrl(article.image);
           
           const transformedData = {
             ...article,
