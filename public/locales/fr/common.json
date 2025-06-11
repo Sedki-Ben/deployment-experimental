@@ -132,5 +132,14 @@
   "Welcome Text": "Bienvenue sur Pure Tactics Cartel - Votre portail vers l'analyse et les histoires du football.",
   "More from": "Plus de",
   "Previous Article": "Article Précédent",
-  "Next Article": "Article Suivant"
+  "Next Article": "Article Suivant",
+  "Search articles": "Rechercher des articles",
+  "Search articles...": "Rechercher des articles...",
+  "All Categories": "Toutes les Catégories",
+  "Searching...": "Recherche...",
+  "Search failed. Please try again.": "Échec de la recherche. Veuillez réessayer.",
+  "No articles found for": "Aucun article trouvé pour",
+  "Try different keywords or browse categories": "Essayez différents mots-clés ou parcourez les catégories",
+  "Start typing to search articles...": "Commencez à taper pour rechercher des articles...",
+  "Search in titles, content, and tags": "Rechercher dans les titres, le contenu et les étiquettes"
 } 

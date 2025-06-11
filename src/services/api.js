@@ -60,6 +60,7 @@ export const articles = {
     getByType: (type, params) => api.get(`/articles/type/${type}`, { params }),
     getBySlug: (slug) => api.get(`/articles/slug/${slug}`),
     getById: (id) => api.get(`/articles/${id}`),
+    search: (query, params) => api.get('/articles/search', { params: { q: query, ...params } }),
     create: (data) => {
         if (data instanceof FormData) {
             return api.post('/articles', data, { headers: { 'Content-Type': 'multipart/form-data' } });

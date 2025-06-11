@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next';
 import LanguageSelector from './components/LanguageSelector';
 import ThemeToggle from './components/ThemeToggle';
 import UserAvatar from './components/UserAvatar';
+import SearchModal from './components/SearchModal';
 import Home from './pages/Home';
 import EtoileDuSahel from './pages/EtoileDuSahel';
 import TheBeautifulGame from './pages/TheBeautifulGame';
@@ -22,11 +23,13 @@ import ProtectedRoute from './components/ProtectedRoute';
 import ProtectedAdminRoute from './components/ProtectedAdminRoute';
 import { AuthProvider } from './contexts/AuthContext';
 import './App.css';
+import React from 'react';
 
 function AppContent() {
   const location = useLocation();
   const { t, i18n } = useTranslation();
   const isRTL = i18n.language === 'ar';
+  const [isSearchOpen, setIsSearchOpen] = React.useState(false);
   
   const isActiveRoute = (path) => {
     return location.pathname === path;
@@ -43,7 +46,11 @@ function AppContent() {
               <UserAvatar />
             </div>
             <div className="flex items-center gap-4" dir="ltr">
-              <button className="p-2 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-300">
+              <button 
+                onClick={() => setIsSearchOpen(true)}
+                className="p-2 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-300 hover:scale-105"
+                aria-label={t('Search articles')}
+              >
                 <FiSearch className="w-5 h-5" />
               </button>
               <ThemeToggle />
@@ -133,6 +140,12 @@ function AppContent() {
           </nav>
         </div>
       </header>
+
+      {/* Search Modal */}
+      <SearchModal 
+        isOpen={isSearchOpen} 
+        onClose={() => setIsSearchOpen(false)} 
+      />
 
       {/* Main Content - Dynamic based on route */}
       <main className="container mx-auto px-4 py-8 max-w-7xl">
