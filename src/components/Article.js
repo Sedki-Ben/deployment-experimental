@@ -198,10 +198,20 @@ function Article({ article }) {
   // Get current language content or fallback to English
   const getCurrentLanguageContent = () => {
     const currentLang = i18n.language;
+    console.log('Article Component - getCurrentLanguageContent called:');
+    console.log('- Current language:', currentLang);
+    console.log('- Article ID:', article._id || article.id);
+    console.log('- Article translations:', article.translations);
+    
     if (article.translations && article.translations[currentLang]) {
+      console.log(`- Found ${currentLang} translation:`, article.translations[currentLang]);
       return article.translations[currentLang];
     }
+    
     // Fallback to English if current language not available
+    console.log(`- No ${currentLang} translation found, falling back to English`);
+    console.log('- English translation:', article.translations?.en);
+    
     return article.translations?.en || {
       title: 'Untitled',
       content: [],
@@ -471,9 +481,19 @@ function Article({ article }) {
       {/* Hero Image */}
       <div className="relative h-[40vh] md:h-[50vh]">
         <img
-          src={article.image}
+          src={(() => {
+            const backendUrl = process.env.REACT_APP_API_URL?.replace('/api', '') || 'http://localhost:5000';
+            const imageUrl = article.image;
+            // Construct full image URL if it's a relative path
+            return imageUrl?.startsWith('http') ? imageUrl : 
+                   imageUrl?.startsWith('/') ? `${backendUrl}${imageUrl}` : imageUrl;
+          })()}
           alt={localizedContent.title}
           className="w-full h-full object-cover"
+          onError={(e) => {
+            console.error('Main image failed to load:', article.image);
+            e.target.src = 'https://via.placeholder.com/800x400/cccccc/666666?text=Image+Not+Available';
+          }}
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
       </div>

@@ -398,12 +398,32 @@ const ContentBlock = ({ block, onUpdate, onDelete, index, dir, currentLanguage }
                     }}
                   >
                     <img
-                      src={img.url}
+                      src={(() => {
+                        // Handle different image URL types
+                        if (img.url?.startsWith('blob:')) {
+                          // New upload - use blob URL
+                          return img.url;
+                        } else if (img.url?.startsWith('http')) {
+                          // Full URL - use as is
+                          return img.url;
+                        } else if (img.url?.startsWith('/')) {
+                          // Relative URL - construct full URL
+                          const backendUrl = process.env.REACT_APP_API_URL?.replace('/api', '') || 'http://localhost:5000';
+                          return `${backendUrl}${img.url}`;
+                        } else {
+                          // Fallback
+                          return img.url || 'https://via.placeholder.com/300x200/cccccc/666666?text=Image+Not+Available';
+                        }
+                      })()}
                       alt=""
                       className={`w-full object-cover cursor-move ${
                         img.size === 'small' ? 'h-32' : 
                         img.size === 'large' ? 'h-64' : 'h-48'
                       }`}
+                      onError={(e) => {
+                        console.error('Image group image failed to load:', img.url);
+                        e.target.src = 'https://via.placeholder.com/300x200/cccccc/666666?text=Image+Error';
+                      }}
                     />
                     
                     {/* Top Controls Bar */}
@@ -558,12 +578,32 @@ const ArticlePreview = ({ title, mainImage, blocks, tags, type, language }) => {
                   images.length === 2 ? 'w-1/2' : 'w-1/3'
                 }`}>
                   <img
-                    src={img.url}
+                    src={(() => {
+                      // Handle different image URL types
+                      if (img.url?.startsWith('blob:')) {
+                        // New upload - use blob URL
+                        return img.url;
+                      } else if (img.url?.startsWith('http')) {
+                        // Full URL - use as is
+                        return img.url;
+                      } else if (img.url?.startsWith('/')) {
+                        // Relative URL - construct full URL
+                        const backendUrl = process.env.REACT_APP_API_URL?.replace('/api', '') || 'http://localhost:5000';
+                        return `${backendUrl}${img.url}`;
+                      } else {
+                        // Fallback
+                        return img.url || 'https://via.placeholder.com/300x200/cccccc/666666?text=Image+Not+Available';
+                      }
+                    })()}
                     alt=""
                     className={`w-full object-cover rounded-lg ${
                       img.size === 'small' ? 'h-32' :
                       img.size === 'large' ? 'h-64' : 'h-48'
                     }`}
+                    onError={(e) => {
+                      console.error('Image group image failed to load:', img.url);
+                      e.target.src = 'https://via.placeholder.com/300x200/cccccc/666666?text=Image+Error';
+                    }}
                   />
                   {img.caption && (
                     <p className="text-sm text-gray-600 dark:text-gray-400 mt-2 text-center">
@@ -595,9 +635,30 @@ const ArticlePreview = ({ title, mainImage, blocks, tags, type, language }) => {
       
       {mainImage && (
         <img
-          src={mainImage.preview || mainImage}
+          src={(() => {
+            // Handle different mainImage types
+            if (typeof mainImage === 'string') {
+              // Existing image URL from database
+              const backendUrl = process.env.REACT_APP_API_URL?.replace('/api', '') || 'http://localhost:5000';
+              return mainImage?.startsWith('http') ? mainImage : 
+                     mainImage?.startsWith('/') ? `${backendUrl}${mainImage}` : mainImage;
+            } else if (mainImage.preview) {
+              // New upload with preview
+              return mainImage.preview;
+            } else if (mainImage.file) {
+              // New upload with file
+              return URL.createObjectURL(mainImage.file);
+            } else {
+              // Fallback
+              return 'https://via.placeholder.com/400x200/cccccc/666666?text=Image+Not+Available';
+            }
+          })()}
           alt="Main article"
           className="w-full h-64 object-cover rounded-lg mb-6"
+          onError={(e) => {
+            console.error('Main image failed to load:', mainImage);
+            e.target.src = 'https://via.placeholder.com/400x200/cccccc/666666?text=Image+Not+Available';
+          }}
         />
       )}
       
@@ -1003,15 +1064,30 @@ const ArticleEditor = ({ onSave, onCancel, initialData = {}, loading = false, er
               {mainImage ? (
                 <div className="relative group">
                   <img
-                    src={
-                      typeof mainImage === 'string' 
-                        ? mainImage 
-                        : mainImage.preview || mainImage.file 
-                          ? URL.createObjectURL(mainImage.file) 
-                          : mainImage
-                    }
+                    src={(() => {
+                      // Handle different mainImage types
+                      if (typeof mainImage === 'string') {
+                        // Existing image URL from database
+                        const backendUrl = process.env.REACT_APP_API_URL?.replace('/api', '') || 'http://localhost:5000';
+                        return mainImage?.startsWith('http') ? mainImage : 
+                               mainImage?.startsWith('/') ? `${backendUrl}${mainImage}` : mainImage;
+                      } else if (mainImage.preview) {
+                        // New upload with preview
+                        return mainImage.preview;
+                      } else if (mainImage.file) {
+                        // New upload with file
+                        return URL.createObjectURL(mainImage.file);
+                      } else {
+                        // Fallback
+                        return 'https://via.placeholder.com/400x200/cccccc/666666?text=Image+Not+Available';
+                      }
+                    })()}
                     alt="Main article"
                     className="w-full h-64 object-cover rounded-lg"
+                    onError={(e) => {
+                      console.error('Main image failed to load:', mainImage);
+                      e.target.src = 'https://via.placeholder.com/400x200/cccccc/666666?text=Image+Not+Available';
+                    }}
                   />
                   <button
                     type="button"
