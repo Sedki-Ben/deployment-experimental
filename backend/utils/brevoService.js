@@ -5,40 +5,42 @@ class BrevoService {
         this.isConfigured = false;
         this.configError = null;
         
+        // Debug log to verify environment variables
+        console.log('Environment check:', {
+            hasApiKey: !!process.env.BREVO_API_KEY,
+            hasEmailFrom: !!process.env.EMAIL_FROM,
+            hasSenderName: !!process.env.BREVO_SENDER_NAME
+        });
+        
         // Validate configuration first
         if (!process.env.BREVO_API_KEY) {
             this.configError = 'BREVO_API_KEY is not set in environment variables';
             console.error('❌', this.configError);
-            return; // Don't throw, just mark as not configured
+            return;
         }
         
         if (!process.env.EMAIL_FROM) {
             this.configError = 'EMAIL_FROM is not set in environment variables';
             console.error('❌', this.configError);
-            return; // Don't throw, just mark as not configured
+            return;
         }
 
         try {
-            // Initialize Brevo API client using the correct pattern for v2.x
+            // Initialize Brevo API client
             this.apiInstance = new brevo.TransactionalEmailsApi();
             
-            // Set API key using the correct method for the current SDK version
-            // This follows the pattern from the official Brevo documentation
-            let apiKey = this.apiInstance.authentications?.['api-key'];
-            if (apiKey) {
-                apiKey.apiKey = process.env.BREVO_API_KEY;
-            } else {
-                // Initialize authentications object if it doesn't exist
-                this.apiInstance.authentications = this.apiInstance.authentications || {};
-                this.apiInstance.authentications['api-key'] = { apiKey: process.env.BREVO_API_KEY };
-            }
+            // Set API key directly in the headers
+            this.apiInstance.defaultHeaders = {
+                'api-key': process.env.BREVO_API_KEY,
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            };
             
             this.isConfigured = true;
             console.log('✅ Brevo service initialized successfully');
         } catch (error) {
             this.configError = `Failed to initialize Brevo service: ${error.message}`;
             console.error('❌', this.configError);
-            // Don't throw, just mark as not configured
         }
     }
 
