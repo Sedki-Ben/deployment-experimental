@@ -94,36 +94,26 @@ export const categoryTranslations = {
 
 // Transform backend article to match frontend expectations
 const transformArticle = (article) => {
+  if (!article) return null;
+  
+  // Get backend URL for constructing full image URLs
   const backendUrl = process.env.REACT_APP_API_URL?.replace('/api', '') || 'http://localhost:5000';
   
   const publishedDate = article.publishedAt || article.createdAt;
-  
-  // Helper function to get full URL for images
-  const getFullImageUrl = (imagePath) => {
-    if (!imagePath) return null;
-    
-    // If it's already a full URL (Cloudinary, etc.), return as-is
-    if (imagePath.startsWith('http://') || imagePath.startsWith('https://')) {
-      return imagePath;
-    }
-    
-    // If it's a relative path, prepend backend URL
-    return `${backendUrl}${imagePath}`;
-  };
   
   return {
     id: article._id,
     _id: article._id, // Keep both for compatibility
     translations: article.translations,
     author: article.author?.name || DEFAULT_AUTHOR,
-    authorImage: getFullImageUrl(article.authorImage) || `${backendUrl}${DEFAULT_AUTHOR_IMAGE}`,
+    authorImage: article.authorImage ? `${backendUrl}${article.authorImage}` : `${backendUrl}${DEFAULT_AUTHOR_IMAGE}`,
     date: new Date(publishedDate).toLocaleDateString('en-US', {
       year: 'numeric',
       month: 'long',
       day: 'numeric'
     }),
     rawDate: publishedDate, // Keep raw date for sorting
-    image: getFullImageUrl(article.image),
+    image: article.image ? `${backendUrl}${article.image}` : null,
     category: article.category,
     likes: {
       count: article.likes?.count || 0,

@@ -14,9 +14,9 @@ export const getImageUrl = (imagePath) => {
     return null;
   }
   
-  // If it's already a full URL (including Cloudinary), return as is
-  if (imagePath.startsWith('http://') || imagePath.startsWith('https://')) {
-    console.log('Using full URL as-is:', imagePath);
+  // If it's already a full URL, return as is
+  if (imagePath.startsWith('http')) {
+    console.log('Using full URL:', imagePath);
     return imagePath;
   }
   

@@ -1,7 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { getImageUrl } from '../utils/imageUtils';
 
 const ArticleCard = ({ article, variant = 'default' }) => {
   const { i18n } = useTranslation();
@@ -81,7 +80,7 @@ const ArticleCard = ({ article, variant = 'default' }) => {
       {/* Image */}
       <div className="relative h-48 overflow-hidden">
         <img
-          src={getImageUrl(article.image)}
+          src={article.image}
           alt={localizedContent?.title}
           className="w-full h-full object-cover"
         />

@@ -5,7 +5,6 @@ import { useAuth } from '../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { articles as articleApi } from '../services/api';
 import { getLocalizedArticleContent, categoryTranslations, updateArticleCommentCount, useArticles } from '../hooks/useArticles';
-import { getImageUrl } from '../utils/imageUtils';
 import Newsletter from './Newsletter';
 import CommentsSection from './CommentsSection';
 import ArticleNavigation from './ArticleNavigation';
@@ -371,7 +370,7 @@ function Article({ article }) {
         
         // Construct full image URL if it's a relative path
         const fullImageUrl = imageUrl?.startsWith('http') ? imageUrl : 
-                            getImageUrl(imageUrl);
+                            imageUrl?.startsWith('/') ? `${backendUrl}${imageUrl}` : imageUrl;
         
         return (
           <figure key={index} className={`my-8 ${alignmentClass}`} style={blockStyle}>
@@ -408,7 +407,8 @@ function Article({ article }) {
               'grid-cols-1 md:grid-cols-2 lg:grid-cols-3'
             }`}>
               {images.map((image, imgIndex) => {
-                const fullImageUrl = getImageUrl(image.url);
+                const fullImageUrl = image.url?.startsWith('http') ? image.url : 
+                                   image.url?.startsWith('/') ? `${backendUrlGroup}${image.url}` : image.url;
                 
                 return (
                   <div key={imgIndex} className="space-y-2">
@@ -481,7 +481,13 @@ function Article({ article }) {
       {/* Hero Image */}
       <div className="relative h-[40vh] md:h-[50vh]">
         <img
-          src={getImageUrl(article.image)}
+          src={(() => {
+            const backendUrl = process.env.REACT_APP_API_URL?.replace('/api', '') || 'http://localhost:5000';
+            const imageUrl = article.image;
+            // Construct full image URL if it's a relative path
+            return imageUrl?.startsWith('http') ? imageUrl : 
+                   imageUrl?.startsWith('/') ? `${backendUrl}${imageUrl}` : imageUrl;
+          })()}
           alt={localizedContent.title}
           className="w-full h-full object-cover"
           onError={(e) => {
