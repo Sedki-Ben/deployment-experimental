@@ -75,7 +75,7 @@ function Newsletter({ variant }) {
       setSuccess(true);
       setEmail('');
     } catch (err) {
-      setError(err.response?.data?.msg || t('Failed to subscribe. Please try again.'));
+      setError(err.response?.data?.message || err.response?.data?.msg || t('Failed to subscribe. Please try again.'));
     } finally {
       setLoading(false);
     }
