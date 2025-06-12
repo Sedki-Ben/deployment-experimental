@@ -14,15 +14,19 @@ export const getImageUrl = (imagePath) => {
     return null;
   }
   
-  // If it's already a full URL, return as is
-  if (imagePath.startsWith('http')) {
+  // If it's already a full URL (http or https), return as is
+  if (imagePath.startsWith('http://') || imagePath.startsWith('https://')) {
     console.log('Using full URL:', imagePath);
     return imagePath;
   }
   
   // If it's a relative path, construct the full URL
   const backendUrl = getBackendUrl().replace('/api', ''); // Remove /api suffix if present
-  const fullUrl = `${backendUrl}${imagePath}`;
+  
+  // Ensure imagePath starts with / for proper concatenation
+  const normalizedPath = imagePath.startsWith('/') ? imagePath : `/${imagePath}`;
+  const fullUrl = `${backendUrl}${normalizedPath}`;
+  
   console.log(`Converted relative path "${imagePath}" to full URL: ${fullUrl}`);
   return fullUrl;
 };
