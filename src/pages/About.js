@@ -11,7 +11,7 @@ function About() {
   const [showEmailTooltip, setShowEmailTooltip] = useState(false);
   
   const isRTL = i18n.language === 'ar';
-  const emailAddress = 'sbhsportslab@gmail.com';
+  const emailAddress = 'BonHommelibre25@gmail.com';
 
   // Stats data
   const stats = [
