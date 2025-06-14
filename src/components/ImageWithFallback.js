@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import defaultAuthorImage from '../assets/images/bild3.jpg';
 
 const ImageWithFallback = ({ src, alt, className, fallbackSrc, type = 'article' }) => {
   const [imageSrc, setImageSrc] = useState(src);
@@ -10,8 +11,8 @@ const ImageWithFallback = ({ src, alt, className, fallbackSrc, type = 'article' 
       if (fallbackSrc) {
         setImageSrc(fallbackSrc);
       } else {
-        // Use a reliable fallback image based on type
-        setImageSrc(type === 'profile' ? '/images/default-author.jpg' : '/images/default-article.jpg');
+        // Use bild3.jpg for author images, default-article.jpg for articles
+        setImageSrc(type === 'profile' ? defaultAuthorImage : '/images/default-article.jpg');
       }
     }
   };
