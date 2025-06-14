@@ -116,7 +116,8 @@ const transformArticle = (article) => {
     }),
     rawDate: publishedDate, // Keep raw date for sorting
     image: article.image ? 
-      (article.image.startsWith('http') ? article.image : `${backendUrl}${article.image}`) : 
+      (article.image.startsWith('http') ? article.image : 
+       article.image.startsWith('/') ? `${backendUrl}${article.image}` : article.image) : 
       null,
     category: article.category,
     likes: {

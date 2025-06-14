@@ -383,7 +383,10 @@ function Article({ article }) {
                 height: metadata.images?.[0]?.size === 'small' ? '300px' : 
                        metadata.images?.[0]?.size === 'large' ? '600px' : 'auto'
               }}
-
+              onError={(e) => {
+                console.error('Image failed to load:', imageUrl);
+                e.target.src = 'https://via.placeholder.com/800x400/cccccc/666666?text=Image+Not+Available';
+              }}
             />
             {(metadata.caption || metadata.images?.[0]?.caption) && (
               <figcaption className="mt-3 text-center text-sm text-gray-600 dark:text-gray-400">
@@ -420,7 +423,10 @@ function Article({ article }) {
                         height: image.size === 'small' ? '200px' :
                                image.size === 'large' ? '400px' : '300px'
                       }}
-
+                      onError={(e) => {
+                        console.error('Image group image failed to load:', image.url);
+                        e.target.src = 'https://via.placeholder.com/300x200/cccccc/666666?text=Image+Not+Available';
+                      }}
                     />
                     {((image.captions && image.captions[i18n.language]) || image.caption) && (
                       <p className="text-sm text-gray-600 dark:text-gray-400 text-center">
