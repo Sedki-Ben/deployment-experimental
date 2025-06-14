@@ -68,9 +68,9 @@ function AppContent() {
             </Link>
           </div>
           
-          {/* Navigation - Single line, centered */}
-          <nav className="overflow-x-auto whitespace-nowrap pb-2 sm:pb-0 scrollbar-hide" dir={isRTL ? 'rtl' : 'ltr'}>
-            <div className={`inline-flex items-center justify-center ${isRTL ? 'space-x-reverse space-x-2' : 'space-x-2'} min-w-max px-8`} style={{scrollPadding: '2rem'}}>
+          {/* Navigation - Single line, centered on web, scrollable on mobile */}
+          <nav className="sm:flex sm:justify-center overflow-x-auto whitespace-nowrap pb-2 sm:pb-0 scrollbar-hide" dir={isRTL ? 'rtl' : 'ltr'}>
+            <div className={`inline-flex items-center sm:justify-center ${isRTL ? 'space-x-reverse space-x-2' : 'space-x-2'} min-w-max px-8 sm:px-4`} style={{scrollPadding: '2rem'}}>
               <Link 
                 to="/" 
                 className={`px-3 py-2 rounded-lg font-medium text-sm transition-all duration-300 ${
