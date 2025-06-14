@@ -1,75 +1,69 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { getLocalizedArticleContent } from '../hooks/useArticles';
+import ArticleImage from './ArticleImage';
 
-const ArticleCard = ({ article, variant = 'default' }) => {
-  const { i18n } = useTranslation();
-  
-  // Get current language content or fallback to English
-  const getCurrentLanguageContent = () => {
-    const currentLang = i18n.language;
-    if (article.translations && article.translations[currentLang]) {
-      return article.translations[currentLang];
-    }
-    // Fallback to English if current language not available
-    return article.translations?.en || {
-      title: 'Untitled',
-      excerpt: 'No excerpt available'
-    };
-  };
-
-  const localizedContent = getCurrentLanguageContent();
-
-  // Get author name based on language
-  const getAuthorName = () => {
-    if (i18n.language === 'ar') {
-      return 'صدقي بن حوالة';
-    }
-    return article.author?.name || article.author || 'Anonymous';
-  };
-
-  // Check if current language is RTL
+const ArticleCard = ({ article }) => {
+  const { t, i18n } = useTranslation();
   const isRTL = i18n.language === 'ar';
+  const localizedContent = getLocalizedArticleContent(article, i18n.language);
 
-  const themeClasses = {
-    'etoile-du-sahel': {
-      gradient: 'from-red-500 to-red-700',
-      hover: 'hover:bg-red-50 dark:hover:bg-red-900/10',
-      border: 'border-red-200 dark:border-red-800',
-      text: 'text-red-600 dark:text-red-400',
-      icon: 'text-red-500'
-    },
-    'the-beautiful-game': {
-      gradient: 'from-green-500 to-green-700',
-      hover: 'hover:bg-green-50 dark:hover:bg-green-900/10',
-      border: 'border-green-200 dark:border-green-800',
-      text: 'text-green-600 dark:text-green-400',
-      icon: 'text-green-500'
-    },
-    'all-sports-hub': {
-      gradient: 'from-purple-500 to-purple-700',
-      hover: 'hover:bg-purple-50 dark:hover:bg-purple-900/10',
-      border: 'border-purple-200 dark:border-purple-800',
-      text: 'text-purple-600 dark:text-purple-400',
-      icon: 'text-purple-500'
-    },
-    'archive': {
-      gradient: 'from-yellow-400 to-yellow-600',
-      hover: 'hover:bg-yellow-50 dark:hover:bg-yellow-900/10',
-      border: 'border-yellow-200 dark:border-yellow-800',
-      text: 'text-yellow-600 dark:text-yellow-400',
-      icon: 'text-yellow-500'
-    },
-    default: {
-      gradient: 'from-gray-500 to-gray-700',
-      hover: 'hover:bg-gray-50 dark:hover:bg-gray-900/10',
-      border: 'border-gray-200 dark:border-gray-800',
-      text: 'text-gray-600 dark:text-gray-400',
-      icon: 'text-gray-500'
+  // Get theme colors based on category
+  const getThemeColors = (category) => {
+    switch (category) {
+      case 'etoile-du-sahel':
+        return {
+          primary: 'from-red-500 to-red-600',
+          light: 'from-red-50 to-red-100',
+          text: 'text-red-700',
+          border: 'border-red-200',
+          icon: 'text-red-500',
+          darkGradient: 'dark:from-red-900/20 dark:to-red-800/20',
+          darkBorder: 'dark:border-red-800/30',
+          hover: 'hover:border-red-300 dark:hover:border-red-700'
+        };
+      case 'the-beautiful-game':
+        return {
+          primary: 'from-green-500 to-emerald-600',
+          light: 'from-green-50 to-emerald-100',
+          text: 'text-green-700',
+          border: 'border-green-200',
+          icon: 'text-green-500',
+          darkGradient: 'dark:from-green-900/20 dark:to-emerald-800/20',
+          darkBorder: 'dark:border-green-800/30',
+          hover: 'hover:border-green-300 dark:hover:border-green-700'
+        };
+      case 'all-sports-hub':
+        return {
+          primary: 'from-purple-500 to-indigo-600',
+          light: 'from-purple-50 to-indigo-100',
+          text: 'text-purple-700',
+          border: 'border-purple-200',
+          icon: 'text-purple-500',
+          darkGradient: 'dark:from-purple-900/20 dark:to-indigo-800/20',
+          darkBorder: 'dark:border-purple-800/30',
+          hover: 'hover:border-purple-300 dark:hover:border-purple-700'
+        };
+      default:
+        return {
+          primary: 'from-gray-500 to-gray-600',
+          light: 'from-gray-50 to-gray-100',
+          text: 'text-gray-700',
+          border: 'border-gray-200',
+          icon: 'text-gray-500',
+          darkGradient: 'dark:from-gray-900/20 dark:to-gray-800/20',
+          darkBorder: 'dark:border-gray-800/30',
+          hover: 'hover:border-gray-300 dark:hover:border-gray-700'
+        };
     }
   };
 
-  const theme = themeClasses[article.category] || themeClasses.default;
+  const theme = getThemeColors(article.category);
+
+  const getAuthorName = () => {
+    return article.author?.name || 'Unknown Author';
+  };
 
   return (
     <Link 
@@ -79,7 +73,7 @@ const ArticleCard = ({ article, variant = 'default' }) => {
     >
       {/* Image */}
       <div className="relative h-48 overflow-hidden">
-        <img
+        <ArticleImage
           src={article.image}
           alt={localizedContent?.title}
           className="w-full h-full object-cover"
@@ -110,13 +104,10 @@ const ArticleCard = ({ article, variant = 'default' }) => {
         {/* Meta information */}
         <div className={`flex items-center justify-between ${isRTL ? 'flex-row-reverse' : ''}`}>
           <div className={`flex items-center ${isRTL ? 'space-x-reverse space-x-2' : 'space-x-2'}`}>
-            <img
+            <ArticleImage
               src={article.authorImage}
               alt={getAuthorName()}
               className="w-8 h-8 rounded-full object-cover"
-              onError={(e) => {
-                e.target.src = '/src/assets/images/bild3.jpg'; // Fallback image
-              }}
             />
             <span className="text-sm text-gray-600 dark:text-gray-400">
               {getAuthorName()}

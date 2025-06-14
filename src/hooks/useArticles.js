@@ -96,9 +96,6 @@ export const categoryTranslations = {
 const transformArticle = (article) => {
   if (!article) return null;
   
-  // Get backend URL for constructing full image URLs
-  const backendUrl = process.env.REACT_APP_API_URL?.replace('/api', '') || 'http://localhost:5000';
-  
   const publishedDate = article.publishedAt || article.createdAt;
   
   return {
@@ -106,19 +103,14 @@ const transformArticle = (article) => {
     _id: article._id, // Keep both for compatibility
     translations: article.translations,
     author: article.author?.name || DEFAULT_AUTHOR,
-    authorImage: article.authorImage ? 
-      (article.authorImage.startsWith('http') ? article.authorImage : `${backendUrl}${article.authorImage}`) : 
-      `${backendUrl}${DEFAULT_AUTHOR_IMAGE}`,
+    authorImage: article.authorImage || DEFAULT_AUTHOR_IMAGE,
     date: new Date(publishedDate).toLocaleDateString('en-US', {
       year: 'numeric',
       month: 'long',
       day: 'numeric'
     }),
     rawDate: publishedDate, // Keep raw date for sorting
-    image: article.image ? 
-      (article.image.startsWith('http') ? article.image : 
-       article.image.startsWith('/') ? `${backendUrl}${article.image}` : article.image) : 
-      null,
+    image: article.image, // Use image URL directly from Cloudinary
     category: article.category,
     likes: {
       count: article.likes?.count || 0,

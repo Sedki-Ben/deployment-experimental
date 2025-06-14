@@ -4,6 +4,7 @@ import { FiChevronLeft, FiChevronRight, FiClock, FiStar } from 'react-icons/fi';
 import { GiBoxingGlove } from 'react-icons/gi';
 import { useTranslation } from 'react-i18next';
 import { getLocalizedArticleContent } from '../hooks/useArticles';
+import ArticleImage from './ArticleImage';
 
 const ArticleNavigation = ({ currentArticle, previousArticle, nextArticle, loading = false }) => {
   const { t, i18n } = useTranslation();
@@ -194,7 +195,7 @@ const ArticleNavigation = ({ currentArticle, previousArticle, nextArticle, loadi
               {/* Article Preview */}
               <div className={`flex gap-4 ${isRTL ? 'flex-row-reverse' : ''}`}>
                 <div className="flex-shrink-0 w-20 h-20 rounded-lg overflow-hidden shadow-md">
-                  <img
+                  <ArticleImage
                     src={previousArticle.image}
                     alt={getLocalizedArticleContent(previousArticle, i18n.language)?.title}
                     className="w-full h-full object-cover"
@@ -250,7 +251,7 @@ const ArticleNavigation = ({ currentArticle, previousArticle, nextArticle, loadi
                   </p>
                 </div>
                 <div className="flex-shrink-0 w-20 h-20 rounded-lg overflow-hidden shadow-md">
-                  <img
+                  <ArticleImage
                     src={nextArticle.image}
                     alt={getLocalizedArticleContent(nextArticle, i18n.language)?.title}
                     className="w-full h-full object-cover"
