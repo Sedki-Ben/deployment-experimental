@@ -175,7 +175,8 @@ export const useArticles = () => {
       setLoading(true);
       setError(null);
       console.log('Fetching all articles...');
-      const response = await articlesAPI.getAll({ status: 'published' });
+      // Set a large limit to get all articles
+      const response = await articlesAPI.getAll({ status: 'published', limit: 100 });
       console.log('All articles response:', response.data);
       const transformedArticles = response.data.articles?.map(transformArticle) || [];
       console.log('Transformed articles:', transformedArticles);
