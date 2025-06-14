@@ -96,69 +96,29 @@ export const categoryTranslations = {
 const transformArticle = (article) => {
   if (!article) return null;
   
-  const publishedDate = article.publishedAt || article.createdAt;
+  // Get backend URL for constructing full image URLs
+  const backendUrl = process.env.REACT_APP_API_URL?.replace('/api', '') || 'http://localhost:5000';
   
-  // Helper function to ensure Cloudinary URL
-  const ensureCloudinaryUrl = (url) => {
-    if (!url) return null;
-    // If it's already a Cloudinary URL, return as is
-    if (url.startsWith('https://res.cloudinary.com/')) {
-      return url;
-    }
-    // If it's a local path, try to find the corresponding Cloudinary URL
-    if (url.startsWith('/uploads/')) {
-      console.warn('Found local upload path, attempting to find Cloudinary URL:', url);
-      // Extract filename from path
-      const filename = url.split('/').pop();
-      // Try to find the corresponding Cloudinary URL in the article's content
-      const cloudinaryUrl = findCloudinaryUrlInContent(article, filename);
-      if (cloudinaryUrl) {
-        console.log('Found corresponding Cloudinary URL:', cloudinaryUrl);
-        return cloudinaryUrl;
-      }
-    }
-    // If we can't find a Cloudinary URL, return the original URL
-    return url;
-  };
-
-  // Helper function to find Cloudinary URL in article content
-  const findCloudinaryUrlInContent = (article, filename) => {
-    // Check main image
-    if (article.image?.startsWith('https://res.cloudinary.com/')) {
-      return article.image;
-    }
-    
-    // Check content images in all languages
-    const languages = ['en', 'fr', 'ar'];
-    for (const lang of languages) {
-      if (article.translations?.[lang]?.content) {
-        for (const block of article.translations[lang].content) {
-          if (block.type === 'image-group' && block.metadata?.images) {
-            for (const img of block.metadata.images) {
-              if (img.url?.startsWith('https://res.cloudinary.com/')) {
-                return img.url;
-              }
-            }
-          }
-        }
-      }
-    }
-    return null;
-  };
+  const publishedDate = article.publishedAt || article.createdAt;
   
   return {
     id: article._id,
     _id: article._id, // Keep both for compatibility
     translations: article.translations,
     author: article.author?.name || DEFAULT_AUTHOR,
-    authorImage: ensureCloudinaryUrl(article.authorImage) || `${process.env.REACT_APP_API_URL?.replace('/api', '') || 'http://localhost:5000'}${DEFAULT_AUTHOR_IMAGE}`,
+    authorImage: article.authorImage ? 
+      (article.authorImage.startsWith('http') ? article.authorImage : `${backendUrl}${article.authorImage}`) : 
+      `${backendUrl}${DEFAULT_AUTHOR_IMAGE}`,
     date: new Date(publishedDate).toLocaleDateString('en-US', {
       year: 'numeric',
       month: 'long',
       day: 'numeric'
     }),
     rawDate: publishedDate, // Keep raw date for sorting
-    image: ensureCloudinaryUrl(article.image),
+    image: article.image ? 
+      (article.image.startsWith('http') ? article.image : 
+       article.image.startsWith('/') ? `${backendUrl}${article.image}` : article.image) : 
+      null,
     category: article.category,
     likes: {
       count: article.likes?.count || 0,
