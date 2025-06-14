@@ -8,7 +8,6 @@ import { getLocalizedArticleContent, categoryTranslations, updateArticleCommentC
 import Newsletter from './Newsletter';
 import CommentsSection from './CommentsSection';
 import ArticleNavigation from './ArticleNavigation';
-import ArticleImage from './ArticleImage';
 
 function Article({ article }) {
   const { i18n, t } = useTranslation();
@@ -366,16 +365,27 @@ function Article({ article }) {
         );
 
       case 'image':
+        const imageUrl = metadata.images?.[0]?.url || content;
+        const backendUrl = process.env.REACT_APP_API_URL?.replace('/api', '') || 'http://localhost:5000';
+        
+        // Construct full image URL if it's a relative path
+        const fullImageUrl = imageUrl?.startsWith('http') ? imageUrl : 
+                            imageUrl?.startsWith('/') ? `${backendUrl}${imageUrl}` : imageUrl;
+        
         return (
-          <figure key={index} className="my-8">
-            <ArticleImage
-              src={metadata.images?.[0]?.url || content}
+          <figure key={index} className={`my-8 ${alignmentClass}`} style={blockStyle}>
+            <img
+              src={fullImageUrl}
               alt={metadata.caption || metadata.images?.[0]?.caption || ''}
               className="w-full max-w-4xl mx-auto rounded-lg shadow-lg"
               style={{
                 objectFit: 'cover',
                 height: metadata.images?.[0]?.size === 'small' ? '300px' : 
                        metadata.images?.[0]?.size === 'large' ? '600px' : 'auto'
+              }}
+              onError={(e) => {
+                console.error('Image failed to load:', imageUrl);
+                e.target.src = 'https://via.placeholder.com/800x400/cccccc/666666?text=Image+Not+Available';
               }}
             />
             {(metadata.caption || metadata.images?.[0]?.caption) && (
@@ -390,31 +400,42 @@ function Article({ article }) {
         const images = metadata.images || [];
         if (images.length === 0) return null;
         
+        const backendUrlGroup = process.env.REACT_APP_API_URL?.replace('/api', '') || 'http://localhost:5000';
+
         return (
-          <figure key={index} className="my-8">
+          <figure key={index} className={`my-8 ${alignmentClass}`} style={blockStyle}>
             <div className={`grid gap-4 ${
               images.length === 1 ? 'grid-cols-1' :
               images.length === 2 ? 'grid-cols-1 md:grid-cols-2' :
               'grid-cols-1 md:grid-cols-2 lg:grid-cols-3'
             }`}>
-              {images.map((image, imgIndex) => (
-                <div key={imgIndex} className="space-y-2">
-                  <ArticleImage
-                    src={image.url}
-                    alt={image.caption || `Image ${imgIndex + 1}`}
-                    className="w-full object-cover rounded-lg shadow-lg"
-                    style={{
-                      height: image.size === 'small' ? '200px' :
-                             image.size === 'large' ? '400px' : '300px'
-                    }}
-                  />
-                  {((image.captions && image.captions[i18n.language]) || image.caption) && (
-                    <p className="text-sm text-gray-600 dark:text-gray-400 text-center">
-                      {image.captions?.[i18n.language] || image.caption}
-                    </p>
-                  )}
-                </div>
-              ))}
+              {images.map((image, imgIndex) => {
+                const fullImageUrl = image.url?.startsWith('http') ? image.url : 
+                                   image.url?.startsWith('/') ? `${backendUrlGroup}${image.url}` : image.url;
+                
+                return (
+                  <div key={imgIndex} className="space-y-2">
+                    <img
+                      src={fullImageUrl}
+                      alt={image.caption || `Image ${imgIndex + 1}`}
+                      className="w-full object-cover rounded-lg shadow-lg"
+                      style={{
+                        height: image.size === 'small' ? '200px' :
+                               image.size === 'large' ? '400px' : '300px'
+                      }}
+                      onError={(e) => {
+                        console.error('Image group image failed to load:', image.url);
+                        e.target.src = 'https://via.placeholder.com/300x200/cccccc/666666?text=Image+Not+Available';
+                      }}
+                    />
+                    {((image.captions && image.captions[i18n.language]) || image.caption) && (
+                      <p className="text-sm text-gray-600 dark:text-gray-400 text-center">
+                        {image.captions?.[i18n.language] || image.caption}
+                      </p>
+                    )}
+                  </div>
+                );
+              })}
             </div>
           </figure>
         );
@@ -465,10 +486,20 @@ function Article({ article }) {
         dir={isRTL ? 'rtl' : 'ltr'}>
       {/* Hero Image */}
       <div className="relative h-[40vh] md:h-[50vh]">
-        <ArticleImage
-          src={article.image}
+        <img
+          src={(() => {
+            const backendUrl = process.env.REACT_APP_API_URL?.replace('/api', '') || 'http://localhost:5000';
+            const imageUrl = article.image;
+            // Construct full image URL if it's a relative path
+            return imageUrl?.startsWith('http') ? imageUrl : 
+                   imageUrl?.startsWith('/') ? `${backendUrl}${imageUrl}` : imageUrl;
+          })()}
           alt={localizedContent.title}
           className="w-full h-full object-cover"
+          onError={(e) => {
+            console.error('Main image failed to load:', article.image);
+            e.target.src = 'https://via.placeholder.com/800x400/cccccc/666666?text=Image+Not+Available';
+          }}
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
       </div>
@@ -490,8 +521,8 @@ function Article({ article }) {
             {localizedContent.title}
           </h1>
           <div className={`flex items-center gap-4 ${isRTL ? 'flex-row-reverse justify-end' : 'justify-start'}`} style={{ direction: isRTL ? 'rtl' : 'ltr' }}>
-            <ArticleImage
-              src={article.authorImage}
+            <img
+              src={article.authorImage || 'https://via.placeholder.com/40'}
               alt={getAuthorName()}
               className={`w-12 h-12 rounded-full object-cover object-center border-2 ${theme.border}`}
             />
