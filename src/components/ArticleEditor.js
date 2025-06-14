@@ -404,7 +404,7 @@ const ContentBlock = ({ block, onUpdate, onDelete, index, dir, currentLanguage }
                           // New upload - use blob URL
                           return img.url;
                         } else if (img.url?.startsWith('http')) {
-                          // Full URL - use as is
+                          // Full URL (Cloudinary) - use as is
                           return img.url;
                         } else if (img.url?.startsWith('/')) {
                           // Relative URL - construct full URL
@@ -584,7 +584,7 @@ const ArticlePreview = ({ title, mainImage, blocks, tags, type, language }) => {
                         // New upload - use blob URL
                         return img.url;
                       } else if (img.url?.startsWith('http')) {
-                        // Full URL - use as is
+                        // Full URL (Cloudinary) - use as is
                         return img.url;
                       } else if (img.url?.startsWith('/')) {
                         // Relative URL - construct full URL
@@ -638,10 +638,13 @@ const ArticlePreview = ({ title, mainImage, blocks, tags, type, language }) => {
           src={(() => {
             // Handle different mainImage types
             if (typeof mainImage === 'string') {
-              // Existing image URL from database
+              // If it's already a full URL (Cloudinary), use it as is
+              if (mainImage?.startsWith('http')) {
+                return mainImage;
+              }
+              // If it's a relative path, construct the full URL
               const backendUrl = process.env.REACT_APP_API_URL?.replace('/api', '') || 'http://localhost:5000';
-              return mainImage?.startsWith('http') ? mainImage : 
-                     mainImage?.startsWith('/') ? `${backendUrl}${mainImage}` : mainImage;
+              return mainImage?.startsWith('/') ? `${backendUrl}${mainImage}` : mainImage;
             } else if (mainImage.preview) {
               // New upload with preview
               return mainImage.preview;
@@ -1067,10 +1070,13 @@ const ArticleEditor = ({ onSave, onCancel, initialData = {}, loading = false, er
                     src={(() => {
                       // Handle different mainImage types
                       if (typeof mainImage === 'string') {
-                        // Existing image URL from database
+                        // If it's already a full URL (Cloudinary), use it as is
+                        if (mainImage?.startsWith('http')) {
+                          return mainImage;
+                        }
+                        // If it's a relative path, construct the full URL
                         const backendUrl = process.env.REACT_APP_API_URL?.replace('/api', '') || 'http://localhost:5000';
-                        return mainImage?.startsWith('http') ? mainImage : 
-                               mainImage?.startsWith('/') ? `${backendUrl}${mainImage}` : mainImage;
+                        return mainImage?.startsWith('/') ? `${backendUrl}${mainImage}` : mainImage;
                       } else if (mainImage.preview) {
                         // New upload with preview
                         return mainImage.preview;

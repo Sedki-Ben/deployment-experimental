@@ -400,8 +400,6 @@ function Article({ article }) {
         const images = metadata.images || [];
         if (images.length === 0) return null;
         
-        const backendUrlGroup = process.env.REACT_APP_API_URL?.replace('/api', '') || 'http://localhost:5000';
-
         return (
           <figure key={index} className={`my-8 ${alignmentClass}`} style={blockStyle}>
             <div className={`grid gap-4 ${
@@ -410,8 +408,9 @@ function Article({ article }) {
               'grid-cols-1 md:grid-cols-2 lg:grid-cols-3'
             }`}>
               {images.map((image, imgIndex) => {
+                // If the image URL is already a full URL (Cloudinary), use it as is
                 const fullImageUrl = image.url?.startsWith('http') ? image.url : 
-                                   image.url?.startsWith('/') ? `${backendUrlGroup}${image.url}` : image.url;
+                                   image.url?.startsWith('/') ? `${backendUrl}${image.url}` : image.url;
                 
                 return (
                   <div key={imgIndex} className="space-y-2">
@@ -488,11 +487,13 @@ function Article({ article }) {
       <div className="relative h-[40vh] md:h-[50vh]">
         <img
           src={(() => {
+            // If the image URL is already a full URL (Cloudinary), use it as is
+            if (article.image?.startsWith('http')) {
+              return article.image;
+            }
+            // If it's a relative path, construct the full URL
             const backendUrl = process.env.REACT_APP_API_URL?.replace('/api', '') || 'http://localhost:5000';
-            const imageUrl = article.image;
-            // Construct full image URL if it's a relative path
-            return imageUrl?.startsWith('http') ? imageUrl : 
-                   imageUrl?.startsWith('/') ? `${backendUrl}${imageUrl}` : imageUrl;
+            return article.image?.startsWith('/') ? `${backendUrl}${article.image}` : article.image;
           })()}
           alt={localizedContent.title}
           className="w-full h-full object-cover"
