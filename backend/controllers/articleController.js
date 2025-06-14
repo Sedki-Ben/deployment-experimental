@@ -127,16 +127,12 @@ exports.createArticle = async (req, res) => {
                 translations[lang].content = translations[lang].content.map(block => {
                     if (block.type === 'image-group' && block.metadata?.images) {
                         block.metadata.images = block.metadata.images.map(img => {
-                            // Replace blob URL with Cloudinary URL
+                            // Replace blob URL with server URL
                             if (img.url && img.url.startsWith('blob:') && globalImageIndex < savedContentImages.length) {
                                 return {
                                     ...img,
                                     url: savedContentImages[globalImageIndex++].url
                                 };
-                            }
-                            // If it's already a Cloudinary URL, keep it
-                            if (img.url && img.url.startsWith('https://res.cloudinary.com/')) {
-                                return img;
                             }
                             return img;
                         });
@@ -324,16 +320,12 @@ exports.updateArticle = async (req, res) => {
                         updateData.translations[lang].content = updateData.translations[lang].content.map(block => {
                             if (block.type === 'image-group' && block.metadata?.images) {
                                 block.metadata.images = block.metadata.images.map(img => {
-                                    // Replace blob URL with Cloudinary URL for new uploads
+                                    // Replace blob URL with server URL for new uploads
                                     if (img.url && img.url.startsWith('blob:') && globalImageIndex < savedContentImages.length) {
                                         return {
                                             ...img,
                                             url: savedContentImages[globalImageIndex++].url
                                         };
-                                    }
-                                    // If it's already a Cloudinary URL, keep it
-                                    if (img.url && img.url.startsWith('https://res.cloudinary.com/')) {
-                                        return img;
                                     }
                                     return img;
                                 });
