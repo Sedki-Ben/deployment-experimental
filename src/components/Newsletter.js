@@ -97,10 +97,10 @@ function Newsletter({ variant }) {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
             <p className="text-lg font-medium">
-              {t('Thank you for subscribing!')}
+              {t('newsletter.subscribeSuccess')}
             </p>
             <p className="mt-2 opacity-90">
-              {t('Please check your email to confirm your subscription.')}
+              {t('newsletter.subscribeSuccessWithEmail')}
             </p>
           </div>
         ) : (
