@@ -506,10 +506,10 @@ function Article({ article }) {
       </div>
 
       {/* Article Content */}
-      <div className={`px-6 py-8 md:px-10 ${isRTL ? 'text-right' : 'text-left'}`}>
+      <div className={`px-4 sm:px-6 md:px-10 py-6 sm:py-8 ${isRTL ? 'text-right' : 'text-left'}`}>
         {/* Article Header */}
-        <div className={`mb-8 pb-6 border-b ${theme.border} border-opacity-20`}>
-          <div className={`flex items-center gap-4 mb-4 ${isRTL ? 'flex-row-reverse justify-end' : 'justify-start'}`}>
+        <div className={`mb-6 sm:mb-8 pb-4 sm:pb-6 border-b ${theme.border} border-opacity-20`}>
+          <div className={`flex flex-wrap items-center gap-3 sm:gap-4 mb-4 ${isRTL ? 'flex-row-reverse justify-end' : 'justify-start'}`}>
             <span className={`flex items-center gap-2 px-3 py-1 rounded-full text-sm font-medium ${theme.light}`}>
               <FiBookmark className={theme.icon} />
               {getCategoryName()}
@@ -518,14 +518,14 @@ function Article({ article }) {
               {article.date}
             </span>
           </div>
-          <h1 className="text-3xl md:text-4xl lg:text-5xl font-serif font-bold text-gray-900 dark:text-white mb-4">
+          <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-serif font-bold text-gray-900 dark:text-white mb-4">
             {localizedContent.title}
           </h1>
-          <div className={`flex items-center gap-4 ${isRTL ? 'flex-row-reverse justify-end' : 'justify-start'}`} style={{ direction: isRTL ? 'rtl' : 'ltr' }}>
+          <div className={`flex flex-wrap items-center gap-3 sm:gap-4 ${isRTL ? 'flex-row-reverse justify-end' : 'justify-start'}`} style={{ direction: isRTL ? 'rtl' : 'ltr' }}>
             <img
               src={article.authorImage || 'https://via.placeholder.com/40'}
               alt={getAuthorName()}
-              className={`w-12 h-12 rounded-full object-cover object-center border-2 ${theme.border}`}
+              className={`w-10 h-10 sm:w-12 sm:h-12 rounded-full object-cover object-center border-2 ${theme.border}`}
             />
             <span className="font-medium text-gray-900 dark:text-white">
               {getAuthorName()}
@@ -534,14 +534,14 @@ function Article({ article }) {
         </div>
 
         {/* Article Body */}
-        <div className={`prose prose-lg dark:prose-invert max-w-none ${isRTL ? 'prose-rtl' : ''}`}>
+        <div className={`prose prose-sm sm:prose-base md:prose-lg dark:prose-invert max-w-none ${isRTL ? 'prose-rtl' : ''}`}>
           {localizedContent.content && localizedContent.content.length > 0 ? (
             localizedContent.content.map((block, index) => (
               <div key={index}>
                 {renderContentBlock(block, index)}
                 {/* Themed separator after every 3rd content block */}
                 {(index + 1) % 3 === 0 && index < localizedContent.content.length - 1 && (
-                  <div className={`my-8 border-t ${theme.border} opacity-30`}></div>
+                  <div className={`my-6 sm:my-8 border-t ${theme.border} opacity-30`}></div>
                 )}
               </div>
             ))
@@ -553,45 +553,19 @@ function Article({ article }) {
         </div>
 
         {/* Article Footer with Tags */}
-        <div className={`mt-20 relative`}>
-          {/* Thin Colored Separator */}
-          <div 
-            className="w-full h-px mb-6 opacity-50" 
-            style={{
-              backgroundColor: theme.icon.includes('red') ? '#ef4444' :
-                             theme.icon.includes('green') ? '#22c55e' :
-                             theme.icon.includes('purple') ? '#a855f7' :
-                             theme.icon.includes('yellow') ? '#eab308' :
-                             '#6b7280'
-            }}
-          ></div>
-
-          {article.tags && article.tags.length > 0 && (
-            <div className="mb-2">
-              <div className={`flex flex-wrap gap-3 ${isRTL ? 'flex-row-reverse justify-end' : 'justify-start'}`}>
-                {article.tags.map((tag, index) => (
-                  <span
-                    key={index}
-                    className={`
-                      group relative px-4 py-2 rounded-full text-sm font-semibold 
-                      transition-all duration-300 cursor-pointer transform hover:scale-105 
-                      shadow-sm hover:shadow-md
-                      before:absolute before:inset-0 before:rounded-full before:opacity-0 before:transition-opacity before:duration-300
-                      hover:before:opacity-20 active:scale-95
-                      ${theme.light}
-                    `}
-                  >
-                    {/* Tag Text */}
-                    <span className="relative z-10">{tag}</span>
-                  </span>
-                ))}
-              </div>
-            </div>
-          )}
+        <div className={`mt-8 pt-6 border-t ${theme.border} border-opacity-20`}>
+          <div className={`flex flex-wrap gap-2 ${isRTL ? 'justify-end' : 'justify-start'}`}>
+            {article.tags && article.tags.map((tag, index) => (
+              <span
+                key={index}
+                className={`px-3 py-1 rounded-full text-sm font-medium ${theme.light}`}
+              >
+                {tag}
+              </span>
+            ))}
+          </div>
         </div>
-
       </div>
-
     </article>
 
     {/* Article Navigation */}

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { FiChevronLeft, FiChevronRight, FiClock, FiStar } from 'react-icons/fi';
+import { FiChevronLeft, FiChevronRight, FiClock, FiStar, FiArrowLeft, FiArrowRight } from 'react-icons/fi';
 import { GiBoxingGlove } from 'react-icons/gi';
 import { useTranslation } from 'react-i18next';
 import { getLocalizedArticleContent } from '../hooks/useArticles';
@@ -166,102 +166,66 @@ const ArticleNavigation = ({ currentArticle, previousArticle, nextArticle, loadi
       </div>
 
       {/* Navigation Cards */}
-      <div className="grid gap-6 grid-cols-1 md:grid-cols-2">
+      <div className="grid gap-4 sm:gap-6 grid-cols-1 md:grid-cols-2">
         
         {/* Previous Article - Always takes the left/first position */}
         {previousArticle ? (
           <button 
             onClick={() => handleNavigation(`/article/${previousArticle.slug || previousArticle.id}`)}
-            className={`group relative bg-gradient-to-br ${theme.light} ${theme.darkGradient} backdrop-blur-lg rounded-2xl p-6 shadow-lg border ${theme.border} ${theme.darkBorder} hover:shadow-2xl hover:scale-[1.02] transition-all duration-500 overflow-hidden w-full text-left`}
+            className={`group relative bg-gradient-to-br ${theme.light} ${theme.darkGradient} backdrop-blur-lg rounded-xl sm:rounded-2xl p-4 sm:p-6 shadow-lg border ${theme.border} ${theme.darkBorder} hover:shadow-2xl hover:scale-[1.02] transition-all duration-500 overflow-hidden w-full text-left`}
           >
             {/* Decorative Elements */}
-            <div className={`absolute top-0 right-0 w-20 h-20 bg-gradient-to-br ${theme.primary} opacity-10 rounded-full transform translate-x-10 -translate-y-10`}></div>
-            <div className={`absolute bottom-0 left-0 w-16 h-16 bg-gradient-to-tr ${theme.primary} opacity-10 rounded-full transform -translate-x-8 translate-y-8`}></div>
+            <div className={`absolute top-0 right-0 w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br ${theme.primary} opacity-10 rounded-full transform translate-x-8 sm:translate-x-10 -translate-y-8 sm:-translate-y-10`}></div>
+            <div className={`absolute bottom-0 left-0 w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-tr ${theme.primary} opacity-10 rounded-full transform -translate-x-6 sm:-translate-x-8 translate-y-6 sm:translate-y-8`}></div>
             
+            {/* Content */}
             <div className="relative">
-              {/* Direction Indicator */}
-              <div className={`flex items-center gap-3 mb-4 ${isRTL ? 'flex-row-reverse' : ''}`}>
-                {isRTL ? (
-                  <FiChevronRight className={`w-6 h-6 ${theme.icon} group-hover:translate-x-1 transition-transform duration-300`} />
-                ) : (
-                  <FiChevronLeft className={`w-6 h-6 ${theme.icon} group-hover:-translate-x-1 transition-transform duration-300`} />
-                )}
-                <span className={`text-sm font-medium ${theme.text} dark:text-gray-400 uppercase tracking-wide`}>
+              <div className="flex items-center gap-2 mb-2">
+                <FiArrowLeft className={`w-4 h-4 sm:w-5 sm:h-5 ${theme.icon}`} />
+                <span className={`text-sm sm:text-base font-medium ${theme.icon}`}>
                   {t('Previous Article')}
                 </span>
               </div>
-              
-              {/* Article Preview */}
-              <div className={`flex gap-4 ${isRTL ? 'flex-row-reverse' : ''}`}>
-                <div className="flex-shrink-0 w-20 h-20 rounded-lg overflow-hidden shadow-md">
-                  <img
-                    src={previousArticle.image}
-                    alt={getLocalizedArticleContent(previousArticle, i18n.language)?.title}
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <h4 className={`font-serif font-bold text-gray-900 dark:text-white mb-2 line-clamp-2 group-hover:${theme.text.replace('text-', 'text-')} transition-colors duration-300`}>
-                    {getLocalizedArticleContent(previousArticle, i18n.language)?.title}
-                  </h4>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">
-                    {previousArticle.date}
-                  </p>
-                </div>
-              </div>
+              <h3 className={`text-base sm:text-lg font-serif font-bold text-gray-900 dark:text-white mb-2 line-clamp-2 ${theme.groupHover}`}>
+                {getLocalizedArticleContent(previousArticle, i18n.language)?.title}
+              </h3>
+              <p className="text-sm text-gray-600 dark:text-gray-400 line-clamp-2">
+                {getLocalizedArticleContent(previousArticle, i18n.language)?.excerpt}
+              </p>
             </div>
           </button>
         ) : (
-          /* Empty space for previous article when it doesn't exist */
-          <div></div>
+          <div className="hidden md:block"></div>
         )}
 
         {/* Next Article - Always takes the right/second position */}
         {nextArticle ? (
           <button 
             onClick={() => handleNavigation(`/article/${nextArticle.slug || nextArticle.id}`)}
-            className={`group relative bg-gradient-to-br ${theme.light} ${theme.darkGradient} backdrop-blur-lg rounded-2xl p-6 shadow-lg border ${theme.border} ${theme.darkBorder} hover:shadow-2xl hover:scale-[1.02] transition-all duration-500 overflow-hidden w-full text-left`}
+            className={`group relative bg-gradient-to-br ${theme.light} ${theme.darkGradient} backdrop-blur-lg rounded-xl sm:rounded-2xl p-4 sm:p-6 shadow-lg border ${theme.border} ${theme.darkBorder} hover:shadow-2xl hover:scale-[1.02] transition-all duration-500 overflow-hidden w-full text-left`}
           >
             {/* Decorative Elements */}
-            <div className={`absolute top-0 left-0 w-20 h-20 bg-gradient-to-br ${theme.primary} opacity-10 rounded-full transform -translate-x-10 -translate-y-10`}></div>
-            <div className={`absolute bottom-0 right-0 w-16 h-16 bg-gradient-to-tl ${theme.primary} opacity-10 rounded-full transform translate-x-8 translate-y-8`}></div>
+            <div className={`absolute top-0 left-0 w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br ${theme.primary} opacity-10 rounded-full transform -translate-x-8 sm:-translate-x-10 -translate-y-8 sm:-translate-y-10`}></div>
+            <div className={`absolute bottom-0 right-0 w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-tr ${theme.primary} opacity-10 rounded-full transform translate-x-6 sm:translate-x-8 translate-y-6 sm:translate-y-8`}></div>
             
+            {/* Content */}
             <div className="relative">
-              {/* Direction Indicator */}
-              <div className={`flex items-center gap-3 mb-4 ${isRTL ? 'flex-row-reverse justify-end' : 'justify-end'}`}>
-                <span className={`text-sm font-medium ${theme.text} dark:text-gray-400 uppercase tracking-wide`}>
+              <div className="flex items-center gap-2 mb-2">
+                <span className={`text-sm sm:text-base font-medium ${theme.icon}`}>
                   {t('Next Article')}
                 </span>
-                {isRTL ? (
-                  <FiChevronLeft className={`w-6 h-6 ${theme.icon} group-hover:-translate-x-1 transition-transform duration-300`} />
-                ) : (
-                  <FiChevronRight className={`w-6 h-6 ${theme.icon} group-hover:translate-x-1 transition-transform duration-300`} />
-                )}
+                <FiArrowRight className={`w-4 h-4 sm:w-5 sm:h-5 ${theme.icon}`} />
               </div>
-              
-              {/* Article Preview */}
-              <div className={`flex gap-4 ${isRTL ? 'flex-row-reverse' : ''}`}>
-                <div className="flex-1 min-w-0">
-                  <h4 className={`font-serif font-bold text-gray-900 dark:text-white mb-2 line-clamp-2 group-hover:${theme.text.replace('text-', 'text-')} transition-colors duration-300 ${isRTL ? 'text-right' : 'text-right'}`}>
-                    {getLocalizedArticleContent(nextArticle, i18n.language)?.title}
-                  </h4>
-                  <p className={`text-sm text-gray-600 dark:text-gray-400 ${isRTL ? 'text-right' : 'text-right'}`}>
-                    {nextArticle.date}
-                  </p>
-                </div>
-                <div className="flex-shrink-0 w-20 h-20 rounded-lg overflow-hidden shadow-md">
-                  <img
-                    src={nextArticle.image}
-                    alt={getLocalizedArticleContent(nextArticle, i18n.language)?.title}
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-              </div>
+              <h3 className={`text-base sm:text-lg font-serif font-bold text-gray-900 dark:text-white mb-2 line-clamp-2 ${theme.groupHover}`}>
+                {getLocalizedArticleContent(nextArticle, i18n.language)?.title}
+              </h3>
+              <p className="text-sm text-gray-600 dark:text-gray-400 line-clamp-2">
+                {getLocalizedArticleContent(nextArticle, i18n.language)?.excerpt}
+              </p>
             </div>
           </button>
         ) : (
-          /* Empty space for next article when it doesn't exist */
-          <div></div>
+          <div className="hidden md:block"></div>
         )}
       </div>
     </div>
