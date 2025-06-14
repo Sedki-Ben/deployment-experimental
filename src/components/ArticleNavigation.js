@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { FiChevronLeft, FiChevronRight, FiClock, FiStar } from 'react-icons/fi';
 import { GiBoxingGlove } from 'react-icons/gi';
 import { useTranslation } from 'react-i18next';
@@ -7,7 +7,14 @@ import { getLocalizedArticleContent } from '../hooks/useArticles';
 
 const ArticleNavigation = ({ currentArticle, previousArticle, nextArticle, loading = false }) => {
   const { t, i18n } = useTranslation();
+  const navigate = useNavigate();
   const isRTL = i18n.language === 'ar';
+
+  // Handle navigation with scroll to top
+  const handleNavigation = (to) => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    navigate(to);
+  };
 
   // Debug logging
   console.log('ArticleNavigation render:', { 
@@ -163,9 +170,9 @@ const ArticleNavigation = ({ currentArticle, previousArticle, nextArticle, loadi
         
         {/* Previous Article - Always takes the left/first position */}
         {previousArticle ? (
-          <Link 
-            to={`/article/${previousArticle.slug || previousArticle.id}`}
-            className={`group relative bg-gradient-to-br ${theme.light} ${theme.darkGradient} backdrop-blur-lg rounded-2xl p-6 shadow-lg border ${theme.border} ${theme.darkBorder} hover:shadow-2xl hover:scale-[1.02] transition-all duration-500 overflow-hidden`}
+          <button 
+            onClick={() => handleNavigation(`/article/${previousArticle.slug || previousArticle.id}`)}
+            className={`group relative bg-gradient-to-br ${theme.light} ${theme.darkGradient} backdrop-blur-lg rounded-2xl p-6 shadow-lg border ${theme.border} ${theme.darkBorder} hover:shadow-2xl hover:scale-[1.02] transition-all duration-500 overflow-hidden w-full text-left`}
           >
             {/* Decorative Elements */}
             <div className={`absolute top-0 right-0 w-20 h-20 bg-gradient-to-br ${theme.primary} opacity-10 rounded-full transform translate-x-10 -translate-y-10`}></div>
@@ -203,7 +210,7 @@ const ArticleNavigation = ({ currentArticle, previousArticle, nextArticle, loadi
                 </div>
               </div>
             </div>
-          </Link>
+          </button>
         ) : (
           /* Empty space for previous article when it doesn't exist */
           <div></div>
@@ -211,9 +218,9 @@ const ArticleNavigation = ({ currentArticle, previousArticle, nextArticle, loadi
 
         {/* Next Article - Always takes the right/second position */}
         {nextArticle ? (
-          <Link 
-            to={`/article/${nextArticle.slug || nextArticle.id}`}
-            className={`group relative bg-gradient-to-br ${theme.light} ${theme.darkGradient} backdrop-blur-lg rounded-2xl p-6 shadow-lg border ${theme.border} ${theme.darkBorder} hover:shadow-2xl hover:scale-[1.02] transition-all duration-500 overflow-hidden`}
+          <button 
+            onClick={() => handleNavigation(`/article/${nextArticle.slug || nextArticle.id}`)}
+            className={`group relative bg-gradient-to-br ${theme.light} ${theme.darkGradient} backdrop-blur-lg rounded-2xl p-6 shadow-lg border ${theme.border} ${theme.darkBorder} hover:shadow-2xl hover:scale-[1.02] transition-all duration-500 overflow-hidden w-full text-left`}
           >
             {/* Decorative Elements */}
             <div className={`absolute top-0 left-0 w-20 h-20 bg-gradient-to-br ${theme.primary} opacity-10 rounded-full transform -translate-x-10 -translate-y-10`}></div>
@@ -251,7 +258,7 @@ const ArticleNavigation = ({ currentArticle, previousArticle, nextArticle, loadi
                 </div>
               </div>
             </div>
-          </Link>
+          </button>
         ) : (
           /* Empty space for next article when it doesn't exist */
           <div></div>
