@@ -70,7 +70,7 @@ function AppContent() {
           
           {/* Navigation - Single line, centered */}
           <nav className="flex justify-center items-center overflow-x-auto whitespace-nowrap pb-2 sm:pb-0 px-4 scrollbar-hide" dir={isRTL ? 'rtl' : 'ltr'}>
-            <div className={`inline-flex items-center ${isRTL ? 'space-x-reverse space-x-2' : 'space-x-2'} min-w-max px-4`}>
+            <div className={`inline-flex items-center ${isRTL ? 'space-x-reverse space-x-2' : 'space-x-2'} min-w-max px-4 mx-auto`}>
               <Link 
                 to="/" 
                 className={`px-3 py-2 rounded-lg font-medium text-sm transition-all duration-300 ${
