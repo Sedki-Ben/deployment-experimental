@@ -8,6 +8,7 @@ import { getLocalizedArticleContent, categoryTranslations, updateArticleCommentC
 import Newsletter from './Newsletter';
 import CommentsSection from './CommentsSection';
 import ArticleNavigation from './ArticleNavigation';
+import ImageWithFallback from './ImageWithFallback';
 
 function Article({ article }) {
   const { i18n, t } = useTranslation();
@@ -485,23 +486,13 @@ function Article({ article }) {
         style={{borderLeftColor: theme.icon.includes('red') ? '#ef4444' : theme.icon.includes('green') ? '#22c55e' : theme.icon.includes('purple') ? '#a855f7' : theme.icon.includes('yellow') ? '#eab308' : '#6b7280'}} 
         dir={isRTL ? 'rtl' : 'ltr'}>
       {/* Hero Image */}
-      <div className="relative h-[40vh] md:h-[50vh]">
-        <img
-          src={(() => {
-            const backendUrl = process.env.REACT_APP_API_URL?.replace('/api', '') || 'http://localhost:5000';
-            const imageUrl = article.image;
-            // Construct full image URL if it's a relative path
-            return imageUrl?.startsWith('http') ? imageUrl : 
-                   imageUrl?.startsWith('/') ? `${backendUrl}${imageUrl}` : imageUrl;
-          })()}
-          alt={localizedContent.title}
+      <div className="relative w-full h-[400px] md:h-[500px] rounded-2xl overflow-hidden shadow-xl">
+        <ImageWithFallback
+          src={articleData.image}
+          alt={getLocalizedArticleContent(articleData, i18n.language)?.title}
           className="w-full h-full object-cover"
-          onError={(e) => {
-            console.error('Main image failed to load:', article.image);
-            e.target.src = 'https://via.placeholder.com/800x400/cccccc/666666?text=Image+Not+Available';
-          }}
+          type="article"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
       </div>
 
       {/* Article Content */}
@@ -520,15 +511,27 @@ function Article({ article }) {
           <h1 className="text-3xl md:text-4xl lg:text-5xl font-serif font-bold text-gray-900 dark:text-white mb-4">
             {localizedContent.title}
           </h1>
-          <div className={`flex items-center gap-4 ${isRTL ? 'flex-row-reverse justify-end' : 'justify-start'}`} style={{ direction: isRTL ? 'rtl' : 'ltr' }}>
-            <img
-              src={article.authorImage || 'https://via.placeholder.com/40'}
-              alt={getAuthorName()}
-              className={`w-12 h-12 rounded-full object-cover object-center border-2 ${theme.border}`}
-            />
-            <span className="font-medium text-gray-900 dark:text-white">
-              {getAuthorName()}
-            </span>
+          <div className="flex items-center gap-4">
+            <div className="w-12 h-12 rounded-full overflow-hidden shadow-md">
+              <ImageWithFallback
+                src={articleData.authorImage}
+                alt={articleData.author?.username || 'Author'}
+                className="w-full h-full object-cover"
+                type="profile"
+              />
+            </div>
+            <div>
+              <p className="font-medium text-gray-900 dark:text-white">
+                {articleData.author?.username || t('Anonymous')}
+              </p>
+              <p className="text-sm text-gray-600 dark:text-gray-400">
+                {new Date(articleData.publishedAt).toLocaleDateString(i18n.language, {
+                  year: 'numeric',
+                  month: 'long',
+                  day: 'numeric'
+                })}
+              </p>
+            </div>
           </div>
         </div>
 
