@@ -71,4 +71,117 @@
       margin: 0 auto;
     }
   }
+
+  /* Mobile-specific styles */
+  @media (max-width: 639px) {
+    /* Navigation text size */
+    nav.scrollbar-hide a {
+      @apply text-xs px-2 py-1.5;
+    }
+
+    /* Article card adjustments */
+    .article-card {
+      @apply p-3;
+    }
+
+    .article-card img {
+      @apply rounded-lg mb-2;
+      max-height: 160px;
+      object-fit: cover;
+      width: 100%;
+    }
+
+    .article-card h3 {
+      @apply text-lg font-bold mb-1;
+      line-height: 1.3;
+    }
+
+    .article-card p {
+      @apply text-sm;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    /* Category icons */
+    .category-icon {
+      @apply w-8 h-8;
+    }
+
+    /* Section titles */
+    .section-title {
+      @apply text-2xl mb-3;
+    }
+
+    /* Article content */
+    .article-content {
+      @apply px-3;
+    }
+
+    .article-content img {
+      @apply my-3 rounded-lg;
+      max-width: 100%;
+      height: auto;
+    }
+
+    .article-content h1 {
+      @apply text-2xl mb-3;
+    }
+
+    .article-content h2 {
+      @apply text-xl mb-2;
+    }
+
+    .article-content p {
+      @apply text-sm leading-relaxed mb-3;
+    }
+
+    /* Newsletter section */
+    .newsletter-section {
+      @apply p-4;
+    }
+
+    .newsletter-section h2 {
+      @apply text-xl mb-2;
+    }
+
+    .newsletter-section p {
+      @apply text-sm mb-3;
+    }
+
+    /* Search modal */
+    .search-modal input {
+      @apply text-sm py-2;
+    }
+
+    .search-modal .search-result {
+      @apply p-2;
+    }
+
+    .search-modal .search-result h3 {
+      @apply text-sm;
+    }
+
+    /* Article navigation */
+    .article-navigation {
+      @apply px-3;
+    }
+
+    .article-navigation h3 {
+      @apply text-lg;
+    }
+
+    .article-navigation .nav-card {
+      @apply p-3;
+    }
+
+    .article-navigation .nav-card img {
+      @apply w-16 h-16;
+    }
+
+    .article-navigation .nav-card h4 {
+      @apply text-sm;
+    }
+  }
 }
