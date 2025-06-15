@@ -50,10 +50,19 @@ const generateToken = (userId) => {
 // Register new user
 exports.register = async (req, res) => {
     try {
+        // FIXED: Properly set language for this request
+        const lang = req.query.lang || req.headers['accept-language']?.split(',')[0]?.split('-')[0] || 'en';
+        if (req.i18n) {
+            req.i18n.changeLanguage(lang);
+        }
+
         // Validate request
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
-            return res.status(400).json({ errors: errors.array() });
+            return res.status(400).json({ 
+                errors: errors.array(),
+                language: lang
+            });
         }
 
         const { name, email, password, language } = req.body;
@@ -61,7 +70,12 @@ exports.register = async (req, res) => {
         // Check if user already exists
         let user = await User.findOne({ email });
         if (user) {
-            return res.status(400).json({ message: 'User already exists' });
+            return res.status(400).json({ 
+                message: 'EMAIL_ALREADY_EXISTS',
+                messageKey: 'auth.emailAlreadyExists',
+                // FIXED: Add language info for frontend
+                language: lang
+            });
         }
 
         // Create new user
@@ -81,29 +95,52 @@ exports.register = async (req, res) => {
                 name: user.name,
                 email: user.email,
                 language: user.language
-            }
+            },
+            // FIXED: Add language info for consistent frontend handling
+            language: lang
         });
     } catch (error) {
         console.error('Register error:', error);
-        res.status(500).json({ message: 'Server error' });
+        const lang = req.query.lang || req.headers['accept-language']?.split(',')[0]?.split('-')[0] || 'en';
+        res.status(500).json({ 
+            message: 'SERVER_ERROR',
+            messageKey: 'errors.general',
+            language: lang
+        });
     }
 };
 
 // Login user
 exports.login = async (req, res) => {
     try {
+        // FIXED: Properly set language for this request
+        const lang = req.query.lang || req.headers['accept-language']?.split(',')[0]?.split('-')[0] || 'en';
+        if (req.i18n) {
+            req.i18n.changeLanguage(lang);
+        }
+
         const { email, password } = req.body;
 
         // Find user
         const user = await User.findOne({ email });
         if (!user) {
-            return res.status(401).json({ message: 'Invalid credentials' });
+            return res.status(401).json({ 
+                message: 'INVALID_CREDENTIALS',
+                messageKey: 'auth.invalidCredentials',
+                // FIXED: Add language info for frontend translation
+                language: lang
+            });
         }
 
         // Check password
         const isMatch = await user.comparePassword(password);
         if (!isMatch) {
-            return res.status(401).json({ message: 'Invalid credentials' });
+            return res.status(401).json({ 
+                message: 'INVALID_CREDENTIALS',
+                messageKey: 'auth.invalidCredentials',
+                // FIXED: Add language info for frontend translation
+                language: lang
+            });
         }
 
         // Generate token
@@ -126,11 +163,18 @@ exports.login = async (req, res) => {
                 website: user.website,
                 twitter: user.twitter,
                 linkedin: user.linkedin
-            }
+            },
+            // FIXED: Add language info for consistent frontend handling
+            language: lang
         });
     } catch (error) {
         console.error('Login error:', error);
-        res.status(500).json({ message: 'Server error' });
+        const lang = req.query.lang || req.headers['accept-language']?.split(',')[0]?.split('-')[0] || 'en';
+        res.status(500).json({ 
+            message: 'SERVER_ERROR',
+            messageKey: 'errors.general',
+            language: lang
+        });
     }
 };
 
@@ -272,40 +316,73 @@ exports.uploadProfileImage = upload.single('profileImage');
 // Change password
 exports.changePassword = async (req, res) => {
     try {
+        // FIXED: Add language support for password change
+        const lang = req.query.lang || req.headers['accept-language']?.split(',')[0]?.split('-')[0] || 'en';
+        if (req.i18n) {
+            req.i18n.changeLanguage(lang);
+        }
+
         const { currentPassword, newPassword } = req.body;
         const userId = req.user.id;
 
         // Find user
         const user = await User.findById(userId);
         if (!user) {
-            return res.status(404).json({ message: 'User not found' });
+            return res.status(404).json({ 
+                message: 'USER_NOT_FOUND',
+                messageKey: 'auth.userNotFound',
+                language: lang
+            });
         }
 
         // Check current password
         const isMatch = await user.comparePassword(currentPassword);
         if (!isMatch) {
-            return res.status(400).json({ message: 'Current password is incorrect' });
+            return res.status(400).json({ 
+                message: 'CURRENT_PASSWORD_INCORRECT',
+                messageKey: 'auth.currentPasswordIncorrect',
+                language: lang
+            });
         }
 
         // Update password
         user.password = newPassword;
         await user.save();
 
-        res.json({ message: 'Password changed successfully' });
+        res.json({ 
+            message: 'PASSWORD_CHANGED_SUCCESS',
+            messageKey: 'auth.passwordChangedSuccess',
+            language: lang
+        });
     } catch (error) {
         console.error('Change password error:', error);
-        res.status(500).json({ message: 'Server error' });
+        const lang = req.query.lang || req.headers['accept-language']?.split(',')[0]?.split('-')[0] || 'en';
+        res.status(500).json({ 
+            message: 'SERVER_ERROR',
+            messageKey: 'errors.general',
+            language: lang
+        });
     }
 };
 
 // Forgot password
 exports.forgotPassword = (req, res) => {
-    res.json({ message: 'Password reset email sent (stub)' });
+    const lang = req.query.lang || req.headers['accept-language']?.split(',')[0]?.split('-')[0] || 'en';
+    res.json({ 
+        message: 'PASSWORD_RESET_EMAIL_SENT',
+        messageKey: 'auth.passwordResetEmailSent',
+        language: lang
+    });
 };
 
 // Reset password
 exports.resetPassword = (req, res) => {
-    res.json({ message: 'Password reset (stub)' });
+    const lang = req.query.lang || req.headers['accept-language']?.split(',')[0]?.split('-')[0] || 'en';
+    res.json({ 
+        message: 'PASSWORD_RESET_SUCCESS',
+        messageKey: 'auth.passwordResetSuccess',
+        language: lang
+    });
 };
 
 // Get all users (admin)

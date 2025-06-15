@@ -4,12 +4,15 @@ import { useLocation } from 'react-router-dom';
 import api from '../services/api';
 
 function Newsletter({ variant }) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const location = useLocation();
   const [email, setEmail] = useState('');
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState('');
+
+  // Check if current language is RTL
+  const isRTL = i18n.language === 'ar';
 
   // Determine variant based on current route if not provided
   const getVariantFromPath = () => {
@@ -65,30 +68,55 @@ function Newsletter({ variant }) {
     setSuccess(false);
 
     try {
-      await api.post('/newsletter/subscribe', {
+      // FIXED: Add language parameter to API request
+      const response = await api.post('/api/newsletter/subscribe', {
         email,
         preferences: {
           type: currentVariant !== 'default' ? currentVariant : 'all'
         }
+      }, {
+        // Add language header to ensure proper i18n on backend
+        headers: {
+          'Accept-Language': i18n.language
+        },
+        // Add language as query parameter as well
+        params: {
+          lang: i18n.language
+        }
       });
 
-      setSuccess(true);
-      setEmail('');
+      if (response.data.messageKey) {
+        setSuccess(true);
+        setEmail('');
+        // FIXED: Handle warning messages with proper translation
+        if (response.data.warning) {
+          setError(t(response.data.warning));
+        }
+      } else {
+        setError(t('errors.general'));
+      }
     } catch (err) {
-      setError(err.response?.data?.message || err.response?.data?.msg || t('Failed to subscribe. Please try again.'));
+      console.error('Newsletter subscription error:', err);
+      const messageKey = err.response?.data?.messageKey;
+      if (messageKey) {
+        // FIXED: Properly translate error messages
+        setError(t(messageKey));
+      } else {
+        setError(t('errors.general'));
+      }
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className={`relative ptc-newsletter ${theme.container} px-6 py-8 md:px-10 rounded-xl shadow-lg dark:shadow-none`}>
+    <div className={`relative ptc-newsletter ${theme.container} px-6 py-8 md:px-10 rounded-xl shadow-lg dark:shadow-none`} dir={isRTL ? 'rtl' : 'ltr'}>
       <div className="max-w-2xl mx-auto text-center">
         <h3 className={`text-2xl font-serif font-bold ${theme.text} mb-4`}>
-          {t('Stay Updated')}
+          {t('newsletter.subscribe')}
         </h3>
         <p className={`${theme.text} mb-6 opacity-90`}>
-          {t('Subscribe to our newsletter to receive the latest updates and exclusive content')}
+          {t('newsletter.subscribeDescription')}
         </p>
         
         {success ? (
@@ -97,10 +125,10 @@ function Newsletter({ variant }) {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
             <p className="text-lg font-medium">
-              {t('Thank you for subscribing!')}
+              {t('newsletter.subscribeSuccess')}
             </p>
             <p className="mt-2 opacity-90">
-              {t('Please check your email to confirm your subscription.')}
+              {t('newsletter.subscribeSuccessWithEmail')}
             </p>
           </div>
         ) : (
@@ -109,8 +137,8 @@ function Newsletter({ variant }) {
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder={t('Enter your email')}
-              className={`ptc-newsletter-input px-4 py-2 rounded-lg bg-white/80 dark:!bg-gray-800/80 border border-gray-200 dark:!border-gray-700 focus:outline-none focus:ring-2 ${theme.ring} flex-grow max-w-md placeholder-gray-500 dark:!placeholder-gray-400 text-gray-900 dark:!text-gray-100`}
+              placeholder={t('newsletter.emailPlaceholder')}
+              className={`ptc-newsletter-input px-4 py-2 rounded-lg bg-white/80 dark:!bg-gray-800/80 border border-gray-200 dark:!border-gray-700 focus:outline-none focus:ring-2 ${theme.ring} flex-grow max-w-md placeholder-gray-500 dark:!placeholder-gray-400 text-gray-900 dark:!text-gray-100 ${isRTL ? 'text-right' : 'text-left'}`}
               required
               disabled={loading}
             />
@@ -119,13 +147,13 @@ function Newsletter({ variant }) {
               disabled={loading}
               className={`ptc-newsletter-button px-6 py-2 ${theme.button} text-white rounded-lg transition-colors duration-300 shadow-md hover:shadow-lg dark:shadow-none disabled:opacity-50`}
             >
-              {loading ? t('Subscribing...') : t('Subscribe')}
+              {loading ? t('newsletter.subscribing') : t('newsletter.subscribe')}
             </button>
           </form>
         )}
 
         {error && (
-          <p className="mt-4 text-red-500 dark:text-red-400">
+          <p className={`mt-4 text-red-500 dark:text-red-400 ${isRTL ? 'text-right' : 'text-left'}`}>
             {error}
           </p>
         )}
@@ -134,4 +162,4 @@ function Newsletter({ variant }) {
   );
 }
 
-export default Newsletter; 
+export default Newsletter;

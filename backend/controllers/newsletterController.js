@@ -6,9 +6,11 @@ const { validationResult } = require('express-validator');
 // Subscribe to newsletter
 exports.subscribe = async (req, res) => {
     try {
-        // Set language for this request
-        const lang = req.query.lang || req.headers['accept-language']?.split(',')[0]?.split('-')[0];
-        if (lang && req.i18n) req.i18n.changeLanguage(lang);
+        // FIXED: Properly set language for this request
+        const lang = req.query.lang || req.headers['accept-language']?.split(',')[0]?.split('-')[0] || 'en';
+        if (req.i18n) {
+            req.i18n.changeLanguage(lang);
+        }
 
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
@@ -20,7 +22,12 @@ exports.subscribe = async (req, res) => {
         // Check if already subscribed
         let subscription = await Subscription.findOne({ email });
         if (subscription) {
-            return res.status(400).json({ message: req.t('newsletter.alreadySubscribed') });
+            return res.status(400).json({ 
+                message: 'EMAIL_ALREADY_SUBSCRIBED',
+                messageKey: 'newsletter.alreadySubscribed',
+                // FIXED: Add language info for frontend
+                language: lang
+            });
         }
 
         // Generate tokens
@@ -72,18 +79,29 @@ exports.subscribe = async (req, res) => {
         // Send verification email (don't fail if email service is down)
         try {
             await EmailService.sendVerificationEmail(subscription, verificationToken);
-            res.status(201).json({ message: req.t('newsletter.subscribeSuccessWithEmail') });
+            res.status(201).json({ 
+                message: 'SUBSCRIPTION_SUCCESS',
+                messageKey: 'newsletter.subscribeSuccessWithEmail',
+                language: lang
+            });
         } catch (emailError) {
             console.error('Failed to send verification email:', emailError);
             // Still return success but with different message
             res.status(201).json({ 
-                message: req.t('newsletter.subscribeSuccessNoEmail'),
-                warning: req.t('newsletter.subscribeWarning')
+                message: 'SUBSCRIPTION_SUCCESS_NO_EMAIL',
+                messageKey: 'newsletter.subscribeSuccessNoEmail',
+                warning: 'newsletter.subscribeWarning',
+                language: lang
             });
         }
     } catch (error) {
         console.error('Newsletter subscription error:', error);
-        res.status(500).json({ message: 'Server error' });
+        const lang = req.query.lang || req.headers['accept-language']?.split(',')[0]?.split('-')[0] || 'en';
+        res.status(500).json({ 
+            message: 'SERVER_ERROR',
+            messageKey: 'errors.general',
+            language: lang
+        });
     }
 };
 
@@ -91,6 +109,12 @@ exports.subscribe = async (req, res) => {
 exports.verifySubscription = async (req, res) => {
     try {
         const { token } = req.params;
+        const lang = req.query.lang || req.headers['accept-language']?.split(',')[0]?.split('-')[0] || 'en';
+        
+        // FIXED: Set language for this request
+        if (req.i18n) {
+            req.i18n.changeLanguage(lang);
+        }
 
         const subscription = await Subscription.findOne({
             verificationToken: token,
@@ -98,7 +122,11 @@ exports.verifySubscription = async (req, res) => {
         });
 
         if (!subscription) {
-            return res.status(400).json({ message: req.t('newsletter.invalidToken') });
+            return res.status(400).json({ 
+                message: req.t ? req.t('newsletter.invalidToken') : 'Invalid token',
+                messageKey: 'newsletter.invalidToken',
+                language: lang
+            });
         }
 
         subscription.isVerified = true;
@@ -106,10 +134,19 @@ exports.verifySubscription = async (req, res) => {
         subscription.verificationExpires = undefined;
         await subscription.save();
 
-        res.json({ message: req.t('newsletter.verificationSuccess') });
+        res.json({ 
+            message: req.t ? req.t('newsletter.verificationSuccess') : 'Verification successful',
+            messageKey: 'newsletter.verificationSuccess',
+            language: lang
+        });
     } catch (error) {
         console.error('Verify subscription error:', error);
-        res.status(500).json({ message: req.t('errors.general') });
+        const lang = req.query.lang || req.headers['accept-language']?.split(',')[0]?.split('-')[0] || 'en';
+        res.status(500).json({ 
+            message: req.t ? req.t('errors.general') : 'Server error',
+            messageKey: 'errors.general',
+            language: lang
+        });
     }
 };
 
@@ -117,17 +154,36 @@ exports.verifySubscription = async (req, res) => {
 exports.unsubscribe = async (req, res) => {
     try {
         const { token } = req.params;
+        const lang = req.query.lang || req.headers['accept-language']?.split(',')[0]?.split('-')[0] || 'en';
+        
+        // FIXED: Set language for this request
+        if (req.i18n) {
+            req.i18n.changeLanguage(lang);
+        }
 
         const subscription = await Subscription.findOne({ unsubscribeToken: token });
         if (!subscription) {
-            return res.status(400).json({ message: 'Invalid unsubscribe token' });
+            return res.status(400).json({ 
+                message: 'Invalid unsubscribe token',
+                messageKey: 'newsletter.invalidToken',
+                language: lang
+            });
         }
 
         await subscription.remove();
-        res.json({ message: 'Successfully unsubscribed' });
+        res.json({ 
+            message: 'Successfully unsubscribed',
+            messageKey: 'newsletter.unsubscribeSuccess',
+            language: lang
+        });
     } catch (error) {
         console.error('Unsubscribe error:', error);
-        res.status(500).json({ message: 'Server error' });
+        const lang = req.query.lang || req.headers['accept-language']?.split(',')[0]?.split('-')[0] || 'en';
+        res.status(500).json({ 
+            message: 'Server error',
+            messageKey: 'errors.general',
+            language: lang
+        });
     }
 };
 
@@ -136,10 +192,20 @@ exports.updatePreferences = async (req, res) => {
     try {
         const { token } = req.params;
         const { preferences } = req.body;
+        const lang = req.query.lang || req.headers['accept-language']?.split(',')[0]?.split('-')[0] || 'en';
+        
+        // FIXED: Set language for this request
+        if (req.i18n) {
+            req.i18n.changeLanguage(lang);
+        }
 
         const subscription = await Subscription.findOne({ unsubscribeToken: token });
         if (!subscription) {
-            return res.status(400).json({ message: 'Invalid token' });
+            return res.status(400).json({ 
+                message: 'Invalid token',
+                messageKey: 'newsletter.invalidToken',
+                language: lang
+            });
         }
 
         subscription.preferences = {
@@ -148,10 +214,19 @@ exports.updatePreferences = async (req, res) => {
         };
 
         await subscription.save();
-        res.json(subscription);
+        res.json({
+            ...subscription.toObject(),
+            messageKey: 'newsletter.preferencesUpdated',
+            language: lang
+        });
     } catch (error) {
         console.error('Update preferences error:', error);
-        res.status(500).json({ message: 'Server error' });
+        const lang = req.query.lang || req.headers['accept-language']?.split(',')[0]?.split('-')[0] || 'en';
+        res.status(500).json({ 
+            message: 'Server error',
+            messageKey: 'errors.general',
+            language: lang
+        });
     }
 };
 
@@ -421,17 +496,29 @@ exports.testSubscriptionEmail = async (req, res) => {
         if (!email) {
             return res.status(400).json({ message: 'Email is required' });
         }
-        // Set language for this request
-        if (lang && req.i18n) req.i18n.changeLanguage(lang);
+        
+        // FIXED: Set language for this request
+        const language = lang || 'en';
+        if (req.i18n) {
+            req.i18n.changeLanguage(language);
+        }
 
         // Simulate a subscription (does not save to DB)
         const verificationToken = 'test-token-123';
         const subscription = { email, verificationToken };
         await require('../utils/emailService').sendVerificationEmail(subscription, verificationToken);
-        res.json({ message: req.t('newsletter.subscribeSuccessWithEmail'), lang: req.language || lang || 'en' });
+        
+        res.json({ 
+            message: req.t ? req.t('newsletter.subscribeSuccessWithEmail') : 'Test email sent',
+            messageKey: 'newsletter.subscribeSuccessWithEmail',
+            lang: language
+        });
     } catch (error) {
         console.error('Test subscription email error:', error);
-        res.status(500).json({ message: 'Failed to send test subscription email', error: error.message });
+        res.status(500).json({ 
+            message: 'Failed to send test subscription email', 
+            error: error.message,
+            messageKey: 'errors.general'
+        });
     }
-}; 
- 
+};
