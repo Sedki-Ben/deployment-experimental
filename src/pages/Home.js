@@ -155,7 +155,7 @@ function Home() {
                     <div className="w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-br from-red-500 to-red-700 rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
                       <FiStar className="text-xl sm:text-2xl text-white" />
                     </div>
-                    <h2 className={`text-3xl sm:text-4xl font-serif font-bold ${themeColors['etoile-du-sahel'].text} group-hover:scale-105 transition-transform duration-300`}>
+                    <h2 className={`text-2xl sm:text-4xl font-serif font-bold ${themeColors['etoile-du-sahel'].text} group-hover:scale-105 transition-transform duration-300`}>
                       {t('Etoile Du Sahel')}
                     </h2>
                   </Link>
@@ -240,7 +240,7 @@ function Home() {
                     <div className="w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-br from-green-500 to-emerald-700 rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
                       <span className="text-xl sm:text-2xl">⚽</span>
                     </div>
-                    <h2 className={`text-3xl sm:text-4xl font-serif font-bold ${themeColors['the-beautiful-game'].text} group-hover:scale-105 transition-transform duration-300`}>
+                    <h2 className={`text-2xl sm:text-4xl font-serif font-bold ${themeColors['the-beautiful-game'].text} group-hover:scale-105 transition-transform duration-300`}>
                       {t('The Beautiful Game')}
                     </h2>
                   </Link>
@@ -325,7 +325,7 @@ function Home() {
                     <div className="w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-br from-purple-500 to-indigo-700 rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
                       <GiBoxingGlove className="text-xl sm:text-2xl text-white" />
                     </div>
-                    <h2 className={`text-3xl sm:text-4xl font-serif font-bold ${themeColors['all-sports-hub'].text} group-hover:scale-105 transition-transform duration-300`}>
+                    <h2 className={`text-2xl sm:text-4xl font-serif font-bold ${themeColors['all-sports-hub'].text} group-hover:scale-105 transition-transform duration-300`}>
                       {t('All-Sports Hub')}
                     </h2>
                   </Link>
