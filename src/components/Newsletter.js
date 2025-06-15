@@ -68,16 +68,25 @@ function Newsletter({ variant }) {
     setSuccess(false);
 
     try {
-      await api.post('/newsletter/subscribe', {
+      const response = await api.post('/api/newsletter/subscribe', {
         email,
         preferences: {
           type: currentVariant !== 'default' ? currentVariant : 'all'
         }
       });
 
-      setSuccess(true);
-      setEmail('');
+      if (response.data.messageKey) {
+        setSuccess(true);
+        setEmail('');
+        // If there's a warning, show it as an error
+        if (response.data.warning) {
+          setError(t(response.data.warning));
+        }
+      } else {
+        setError(t('errors.general'));
+      }
     } catch (err) {
+      console.error('Newsletter subscription error:', err);
       const messageKey = err.response?.data?.messageKey;
       if (messageKey) {
         setError(t(messageKey));
