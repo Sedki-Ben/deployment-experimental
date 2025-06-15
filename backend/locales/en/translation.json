@@ -48,9 +48,12 @@
         "passwordResetSuccess": "Password reset successfully"
     },
     "newsletter": {
-        "subscribe": "Get Weekly Updates",
-        "subscribeSuccess": "Welcome to our community!",
-        "subscribeSuccessWithEmail": "Please check your email to verify your subscription",
+        "title": "Stay Updated",
+        "description": "Subscribe to our newsletter to receive the latest updates and exclusive content",
+        "subscribe": "Subscribe",
+        "subscribing": "Subscribing...",
+        "subscribeSuccess": "Thank you for subscribing!",
+        "subscribeSuccessWithEmail": "Please check your email to confirm your subscription",
         "subscribeSuccessNoEmail": "Subscription created successfully. Verification email could not be sent at this time.",
         "subscribeWarning": "Please contact support if you need to verify your subscription.",
         "unsubscribe": "Unsubscribe",
@@ -58,13 +61,20 @@
         "emailPlaceholder": "Your email address",
         "verificationSuccess": "Subscription verified successfully",
         "invalidToken": "Invalid or expired verification token",
-        "alreadySubscribed": "Email already subscribed"
+        "alreadySubscribed": "Email already subscribed",
+        "noSubscribers": "No verified subscribers found",
+        "sendSuccess": "Newsletter sent successfully",
+        "subscriberNotFound": "Subscriber not found",
+        "subscriberDeleted": "Subscriber deleted successfully"
     },
     "errors": {
         "general": "Oops! Something went wrong",
         "notFound": "Page not found",
         "unauthorized": "Please sign in to continue",
         "forbidden": "You don't have access to this",
-        "validation": "Please check your input"
+        "validation": "Please check your input",
+        "newsletter": {
+            "subscribeFailed": "Failed to subscribe. Please try again."
+        }
     }
 } 
