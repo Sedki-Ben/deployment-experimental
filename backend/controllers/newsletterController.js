@@ -20,10 +20,7 @@ exports.subscribe = async (req, res) => {
         // Check if already subscribed
         let subscription = await Subscription.findOne({ email });
         if (subscription) {
-            return res.status(400).json({ 
-                message: 'EMAIL_ALREADY_SUBSCRIBED',
-                messageKey: 'newsletter.alreadySubscribed'
-            });
+            return res.status(400).json({ message: req.t('newsletter.alreadySubscribed') });
         }
 
         // Generate tokens
@@ -75,25 +72,18 @@ exports.subscribe = async (req, res) => {
         // Send verification email (don't fail if email service is down)
         try {
             await EmailService.sendVerificationEmail(subscription, verificationToken);
-            res.status(201).json({ 
-                message: 'SUBSCRIPTION_SUCCESS',
-                messageKey: 'newsletter.subscribeSuccessWithEmail'
-            });
+            res.status(201).json({ message: req.t('newsletter.subscribeSuccessWithEmail') });
         } catch (emailError) {
             console.error('Failed to send verification email:', emailError);
             // Still return success but with different message
             res.status(201).json({ 
-                message: 'SUBSCRIPTION_SUCCESS_NO_EMAIL',
-                messageKey: 'newsletter.subscribeSuccessNoEmail',
-                warning: 'newsletter.subscribeWarning'
+                message: req.t('newsletter.subscribeSuccessNoEmail'),
+                warning: req.t('newsletter.subscribeWarning')
             });
         }
     } catch (error) {
         console.error('Newsletter subscription error:', error);
-        res.status(500).json({ 
-            message: 'SERVER_ERROR',
-            messageKey: 'errors.general'
-        });
+        res.status(500).json({ message: 'Server error' });
     }
 };
 

@@ -141,20 +141,5 @@
   "No articles found for": "No articles found for",
   "Try different keywords or browse categories": "Try different keywords or browse categories",
   "Start typing to search articles...": "Start typing to search articles...",
-  "Search in titles, content, and tags": "Search in titles, content, and tags",
-  "newsletter": {
-    "subscribe": "Get Weekly Updates",
-    "subscribeDescription": "Subscribe to our newsletter to receive the latest updates and exclusive content",
-    "subscribeSuccess": "Thank you for subscribing!",
-    "subscribeSuccessWithEmail": "Please check your email to confirm your subscription",
-    "subscribeSuccessNoEmail": "Subscription created successfully. Verification email could not be sent at this time.",
-    "subscribeWarning": "Please contact support if you need to verify your subscription.",
-    "unsubscribe": "Unsubscribe",
-    "unsubscribeSuccess": "You've been unsubscribed",
-    "emailPlaceholder": "Your email address",
-    "verificationSuccess": "Subscription verified successfully",
-    "invalidToken": "Invalid or expired verification token",
-    "alreadySubscribed": "This email is already subscribed to our newsletter",
-    "subscribing": "Subscribing..."
-  }
+  "Search in titles, content, and tags": "Search in titles, content, and tags"
 } 

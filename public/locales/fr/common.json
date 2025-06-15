@@ -141,20 +141,5 @@
   "No articles found for": "Aucun article trouvé pour",
   "Try different keywords or browse categories": "Essayez différents mots-clés ou parcourez les catégories",
   "Start typing to search articles...": "Commencez à taper pour rechercher des articles...",
-  "Search in titles, content, and tags": "Rechercher dans les titres, le contenu et les étiquettes",
-  "newsletter": {
-    "subscribe": "Recevez des mises à jour hebdomadaires",
-    "subscribeDescription": "Abonnez-vous à notre newsletter pour recevoir les dernières mises à jour et du contenu exclusif",
-    "subscribeSuccess": "Merci de vous être abonné !",
-    "subscribeSuccessWithEmail": "Veuillez vérifier votre email pour confirmer votre abonnement",
-    "subscribeSuccessNoEmail": "Abonnement créé avec succès. L'email de vérification n'a pas pu être envoyé pour le moment.",
-    "subscribeWarning": "Veuillez contacter le support si vous devez vérifier votre abonnement.",
-    "unsubscribe": "Se désabonner",
-    "unsubscribeSuccess": "Vous avez été désabonné",
-    "emailPlaceholder": "Votre adresse email",
-    "verificationSuccess": "Abonnement vérifié avec succès",
-    "invalidToken": "Token de vérification invalide ou expiré",
-    "alreadySubscribed": "Cette adresse email est déjà abonnée à notre newsletter",
-    "subscribing": "Abonnement en cours..."
-  }
+  "Search in titles, content, and tags": "Rechercher dans les titres, le contenu et les étiquettes"
 } 
