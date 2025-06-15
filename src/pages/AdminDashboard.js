@@ -59,18 +59,19 @@ const AdminDashboard = ({ editMode = false }) => {
     setError('');
     setSuccess(false);
     try {
+      let savedArticle;
       if (editMode && id) {
         // Update existing article
-        await articles.update(id, formData);
+        savedArticle = await articles.update(id, formData);
         setSuccess(true);
-        // Auto-hide success message after 3 seconds
-        setTimeout(() => setSuccess(false), 3000);
+        // Navigate to the article page after successful update
+        navigate(`/article/${savedArticle.data.slug || savedArticle.data._id}`);
       } else {
         // Create new article
-        await articles.create(formData);
+        savedArticle = await articles.create(formData);
         setSuccess(true);
-        // Auto-hide success message after 3 seconds
-        setTimeout(() => setSuccess(false), 3000);
+        // Navigate to the article page after successful creation
+        navigate(`/article/${savedArticle.data.slug || savedArticle.data._id}`);
       }
     } catch (err) {
       setError(err.response?.data?.message || err.response?.data?.msg || 'Failed to save article');
