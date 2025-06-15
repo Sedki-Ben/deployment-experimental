@@ -141,5 +141,20 @@
   "No articles found for": "لم يتم العثور على مقالات لـ",
   "Try different keywords or browse categories": "جرب كلمات مفتاحية مختلفة أو تصفح الفئات",
   "Start typing to search articles...": "ابدأ بالكتابة للبحث في المقالات...",
-  "Search in titles, content, and tags": "البحث في العناوين والمحتوى والعلامات"
+  "Search in titles, content, and tags": "البحث في العناوين والمحتوى والعلامات",
+  "newsletter": {
+    "subscribe": "احصل على التحديثات الأسبوعية",
+    "subscribeDescription": "اشترك في نشرتنا الإخبارية لتلقي آخر التحديثات والمحتوى الحصري",
+    "subscribeSuccess": "شكراً لك على الاشتراك!",
+    "subscribeSuccessWithEmail": "يرجى التحقق من بريدك الإلكتروني لتأكيد اشتراكك",
+    "subscribeSuccessNoEmail": "تم إنشاء الاشتراك بنجاح. لم يتم إرسال بريد التحقق في الوقت الحالي.",
+    "subscribeWarning": "يرجى الاتصال بالدعم إذا كنت بحاجة لتأكيد اشتراكك.",
+    "unsubscribe": "إلغاء الاشتراك",
+    "unsubscribeSuccess": "تم إلغاء اشتراكك",
+    "emailPlaceholder": "أدخل بريدك الإلكتروني",
+    "verificationSuccess": "تم تأكيد الاشتراك بنجاح",
+    "invalidToken": "رمز التحقق غير صالح أو منتهي الصلاحية",
+    "alreadySubscribed": "هذا البريد الإلكتروني مشترك بالفعل في نشرتنا الإخبارية",
+    "subscribing": "جاري الاشتراك..."
+  }
 } 
