@@ -75,7 +75,7 @@ function Newsletter({ variant }) {
       setSuccess(true);
       setEmail('');
     } catch (err) {
-      setError(err.response?.data?.message || err.response?.data?.msg || t('errors.newsletter.subscribeFailed'));
+      setError(err.response?.data?.message || err.response?.data?.msg || t('Failed to subscribe. Please try again.'));
     } finally {
       setLoading(false);
     }
@@ -85,10 +85,10 @@ function Newsletter({ variant }) {
     <div className={`relative ptc-newsletter ${theme.container} px-6 py-8 md:px-10 rounded-xl shadow-lg dark:shadow-none`}>
       <div className="max-w-2xl mx-auto text-center">
         <h3 className={`text-2xl font-serif font-bold ${theme.text} mb-4`}>
-          {t('newsletter.title')}
+          {t('Stay Updated')}
         </h3>
         <p className={`${theme.text} mb-6 opacity-90`}>
-          {t('newsletter.description')}
+          {t('Subscribe to our newsletter to receive the latest updates and exclusive content')}
         </p>
         
         {success ? (
@@ -97,10 +97,10 @@ function Newsletter({ variant }) {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
             <p className="text-lg font-medium">
-              {t('newsletter.subscribeSuccess')}
+              {t('Thank you for subscribing!')}
             </p>
             <p className="mt-2 opacity-90">
-              {t('newsletter.subscribeSuccessWithEmail')}
+              {t('Please check your email to confirm your subscription.')}
             </p>
           </div>
         ) : (
@@ -109,7 +109,7 @@ function Newsletter({ variant }) {
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder={t('newsletter.emailPlaceholder')}
+              placeholder={t('Enter your email')}
               className={`ptc-newsletter-input px-4 py-2 rounded-lg bg-white/80 dark:!bg-gray-800/80 border border-gray-200 dark:!border-gray-700 focus:outline-none focus:ring-2 ${theme.ring} flex-grow max-w-md placeholder-gray-500 dark:!placeholder-gray-400 text-gray-900 dark:!text-gray-100`}
               required
               disabled={loading}
@@ -119,7 +119,7 @@ function Newsletter({ variant }) {
               disabled={loading}
               className={`ptc-newsletter-button px-6 py-2 ${theme.button} text-white rounded-lg transition-colors duration-300 shadow-md hover:shadow-lg dark:shadow-none disabled:opacity-50`}
             >
-              {loading ? t('newsletter.subscribing') : t('newsletter.subscribe')}
+              {loading ? t('Subscribing...') : t('Subscribe')}
             </button>
           </form>
         )}

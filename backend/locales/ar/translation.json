@@ -48,11 +48,8 @@
         "passwordResetSuccess": "تم إعادة تعيين كلمة المرور بنجاح"
     },
     "newsletter": {
-        "title": "ابق على اطلاع",
-        "description": "اشترك في نشرتنا الإخبارية لتلقي آخر التحديثات والمحتوى الحصري",
-        "subscribe": "اشترك",
-        "subscribing": "جاري الاشتراك...",
-        "subscribeSuccess": "شكراً لاشتراكك!",
+        "subscribe": "اشترك في النشرة الإخبارية",
+        "subscribeSuccess": "تم الاشتراك في النشرة الإخبارية بنجاح",
         "subscribeSuccessWithEmail": "يرجى التحقق من بريدك الإلكتروني لتأكيد اشتراكك",
         "subscribeSuccessNoEmail": "تم إنشاء الاشتراك بنجاح. لم يتم إرسال بريد التحقق في الوقت الحالي.",
         "subscribeWarning": "يرجى الاتصال بالدعم إذا كنت بحاجة لتأكيد اشتراكك.",
@@ -61,21 +58,14 @@
         "emailPlaceholder": "أدخل بريدك الإلكتروني",
         "verificationSuccess": "تم تأكيد الاشتراك بنجاح",
         "invalidToken": "رمز التحقق غير صالح أو منتهي الصلاحية",
-        "alreadySubscribed": "البريد الإلكتروني مشترك بالفعل",
-        "noSubscribers": "لم يتم العثور على مشتركين مؤكدين",
-        "sendSuccess": "تم إرسال النشرة الإخبارية بنجاح",
-        "subscriberNotFound": "لم يتم العثور على المشترك",
-        "subscriberDeleted": "تم حذف المشترك بنجاح"
+        "alreadySubscribed": "البريد الإلكتروني مشترك بالفعل"
     },
     "errors": {
         "general": "حدث خطأ ما",
         "notFound": "الصفحة غير موجودة",
         "unauthorized": "غير مصرح بالوصول",
         "forbidden": "الوصول ممنوع",
-        "validation": "خطأ في التحقق",
-        "newsletter": {
-            "subscribeFailed": "فشل الاشتراك. يرجى المحاولة مرة أخرى."
-        }
+        "validation": "خطأ في التحقق"
     }
 } 
  

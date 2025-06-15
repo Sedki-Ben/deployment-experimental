@@ -120,14 +120,14 @@ exports.unsubscribe = async (req, res) => {
 
         const subscription = await Subscription.findOne({ unsubscribeToken: token });
         if (!subscription) {
-            return res.status(400).json({ message: req.t('newsletter.invalidToken') });
+            return res.status(400).json({ message: 'Invalid unsubscribe token' });
         }
 
         await subscription.remove();
-        res.json({ message: req.t('newsletter.unsubscribeSuccess') });
+        res.json({ message: 'Successfully unsubscribed' });
     } catch (error) {
         console.error('Unsubscribe error:', error);
-        res.status(500).json({ message: req.t('errors.general') });
+        res.status(500).json({ message: 'Server error' });
     }
 };
 
@@ -139,7 +139,7 @@ exports.updatePreferences = async (req, res) => {
 
         const subscription = await Subscription.findOne({ unsubscribeToken: token });
         if (!subscription) {
-            return res.status(400).json({ message: req.t('newsletter.invalidToken') });
+            return res.status(400).json({ message: 'Invalid token' });
         }
 
         subscription.preferences = {
@@ -151,7 +151,7 @@ exports.updatePreferences = async (req, res) => {
         res.json(subscription);
     } catch (error) {
         console.error('Update preferences error:', error);
-        res.status(500).json({ message: req.t('errors.general') });
+        res.status(500).json({ message: 'Server error' });
     }
 };
 
@@ -169,7 +169,7 @@ exports.createNewsletter = async (req, res) => {
         res.status(201).json(newsletter);
     } catch (error) {
         console.error('Create newsletter error:', error);
-        res.status(500).json({ message: req.t('errors.general') });
+        res.status(500).json({ message: 'Server error' });
     }
 };
 
@@ -230,7 +230,7 @@ exports.sendNewsletter = async (req, res) => {
         }
 
         if (subscribers.length === 0) {
-            return res.status(400).json({ message: req.t('newsletter.noSubscribers') });
+            return res.status(400).json({ message: 'No verified subscribers found' });
         }
 
         // Create newsletter record
@@ -256,7 +256,7 @@ exports.sendNewsletter = async (req, res) => {
         console.log(`Newsletter sent to ${result.sent} subscribers`);
 
         res.json({
-            message: req.t('newsletter.sendSuccess'),
+            message: 'Newsletter sent successfully',
             newsletter,
             stats: {
                 sent: result.sent,
@@ -266,7 +266,7 @@ exports.sendNewsletter = async (req, res) => {
         });
     } catch (error) {
         console.error('Send newsletter error:', error);
-        res.status(500).json({ message: req.t('errors.general'), error: error.message });
+        res.status(500).json({ message: 'Server error', error: error.message });
     }
 };
 
@@ -317,7 +317,7 @@ exports.getNewsletterStats = async (req, res) => {
         });
     } catch (error) {
         console.error('Get newsletter stats error:', error);
-        res.status(500).json({ message: req.t('errors.general') });
+        res.status(500).json({ message: 'Server error' });
     }
 };
 
@@ -329,16 +329,16 @@ exports.deleteSubscriber = async (req, res) => {
         const subscription = await Subscription.findOneAndDelete({ email });
         
         if (!subscription) {
-            return res.status(404).json({ message: req.t('newsletter.subscriberNotFound') });
+            return res.status(404).json({ message: 'Subscriber not found' });
         }
         
         res.json({ 
-            message: req.t('newsletter.subscriberDeleted'),
+            message: 'Subscriber deleted successfully',
             email: subscription.email
         });
     } catch (error) {
         console.error('Delete subscriber error:', error);
-        res.status(500).json({ message: req.t('errors.general') });
+        res.status(500).json({ message: 'Server error' });
     }
 };
 

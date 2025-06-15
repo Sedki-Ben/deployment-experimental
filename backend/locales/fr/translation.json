@@ -48,11 +48,8 @@
         "passwordResetSuccess": "Mot de passe réinitialisé avec succès"
     },
     "newsletter": {
-        "title": "Restez Informé",
-        "description": "Abonnez-vous à notre newsletter pour recevoir les dernières mises à jour et du contenu exclusif",
-        "subscribe": "S'abonner",
-        "subscribing": "Abonnement en cours...",
-        "subscribeSuccess": "Merci de votre abonnement !",
+        "subscribe": "S'abonner à la Newsletter",
+        "subscribeSuccess": "Abonnement à la newsletter réussi",
         "subscribeSuccessWithEmail": "Veuillez vérifier votre email pour confirmer votre abonnement",
         "subscribeSuccessNoEmail": "Abonnement créé avec succès. L'email de vérification n'a pas pu être envoyé pour le moment.",
         "subscribeWarning": "Veuillez contacter le support si vous devez vérifier votre abonnement.",
@@ -61,21 +58,14 @@
         "emailPlaceholder": "Entrez votre email",
         "verificationSuccess": "Abonnement vérifié avec succès",
         "invalidToken": "Token de vérification invalide ou expiré",
-        "alreadySubscribed": "Email déjà abonné",
-        "noSubscribers": "Aucun abonné vérifié trouvé",
-        "sendSuccess": "Newsletter envoyée avec succès",
-        "subscriberNotFound": "Abonné non trouvé",
-        "subscriberDeleted": "Abonné supprimé avec succès"
+        "alreadySubscribed": "Email déjà abonné"
     },
     "errors": {
         "general": "Une erreur est survenue",
         "notFound": "Page non trouvée",
         "unauthorized": "Accès non autorisé",
         "forbidden": "Accès interdit",
-        "validation": "Erreur de validation",
-        "newsletter": {
-            "subscribeFailed": "Échec de l'abonnement. Veuillez réessayer."
-        }
+        "validation": "Erreur de validation"
     }
 } 
  
