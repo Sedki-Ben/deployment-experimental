@@ -20,6 +20,16 @@ const globalArticleCache = {
       const updated = { ...current, ...updates };
       globalArticleCache.data.set(articleId, updated);
       
+      // Update category cache if the article exists in any category
+      for (const [category, articles] of globalArticleCache.categoryCache.entries()) {
+        const index = articles.findIndex(a => a.id === articleId || a._id === articleId);
+        if (index !== -1) {
+          const updatedArticles = [...articles];
+          updatedArticles[index] = updated;
+          globalArticleCache.categoryCache.set(category, updatedArticles);
+        }
+      }
+      
       console.log('GlobalCache: Notifying', globalArticleCache.subscribers.size, 'subscribers');
       // Notify all subscribers
       globalArticleCache.subscribers.forEach(callback => {
