@@ -152,16 +152,16 @@ function Home() {
               <div className="relative">
                 <div className="flex justify-between items-center mb-10">
                   <Link to="/etoile-du-sahel" className="flex items-center gap-4 group">
-                    <div className="w-16 h-16 bg-gradient-to-br from-red-500 to-red-700 rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
-                      <FiStar className="text-2xl text-white" />
+                    <div className="w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-br from-red-500 to-red-700 rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
+                      <FiStar className="text-xl sm:text-2xl text-white" />
                     </div>
-                    <h2 className={`text-4xl font-serif font-bold ${themeColors['etoile-du-sahel'].text} group-hover:scale-105 transition-transform duration-300`}>
+                    <h2 className={`text-3xl sm:text-4xl font-serif font-bold ${themeColors['etoile-du-sahel'].text} group-hover:scale-105 transition-transform duration-300`}>
                       {t('Etoile Du Sahel')}
                     </h2>
                   </Link>
                   <Link 
                     to="/etoile-du-sahel" 
-                    className={`flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 font-medium`}
+                    className={`hidden sm:flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 font-medium`}
                   >
                     {t('View All')} <FiArrowRight className="w-4 h-4" />
                   </Link>
@@ -237,16 +237,16 @@ function Home() {
               <div className="relative">
                 <div className="flex justify-between items-center mb-10">
                   <Link to="/the-beautiful-game" className="flex items-center gap-4 group">
-                    <div className="w-16 h-16 bg-gradient-to-br from-green-500 to-emerald-700 rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
-                      <span className="text-2xl">⚽</span>
+                    <div className="w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-br from-green-500 to-emerald-700 rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
+                      <span className="text-xl sm:text-2xl">⚽</span>
                     </div>
-                    <h2 className={`text-4xl font-serif font-bold ${themeColors['the-beautiful-game'].text} group-hover:scale-105 transition-transform duration-300`}>
+                    <h2 className={`text-3xl sm:text-4xl font-serif font-bold ${themeColors['the-beautiful-game'].text} group-hover:scale-105 transition-transform duration-300`}>
                       {t('The Beautiful Game')}
                     </h2>
                   </Link>
                   <Link 
                     to="/the-beautiful-game" 
-                    className={`flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 font-medium`}
+                    className={`hidden sm:flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 font-medium`}
                   >
                     {t('View All')} <FiArrowRight className="w-4 h-4" />
                   </Link>
@@ -322,16 +322,16 @@ function Home() {
               <div className="relative">
                 <div className="flex justify-between items-center mb-10">
                   <Link to="/all-sports-hub" className="flex items-center gap-4 group">
-                    <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-indigo-700 rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
-                      <GiBoxingGlove className="text-2xl text-white" />
+                    <div className="w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-br from-purple-500 to-indigo-700 rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
+                      <GiBoxingGlove className="text-xl sm:text-2xl text-white" />
                     </div>
-                    <h2 className={`text-4xl font-serif font-bold ${themeColors['all-sports-hub'].text} group-hover:scale-105 transition-transform duration-300`}>
+                    <h2 className={`text-3xl sm:text-4xl font-serif font-bold ${themeColors['all-sports-hub'].text} group-hover:scale-105 transition-transform duration-300`}>
                       {t('All-Sports Hub')}
                     </h2>
                   </Link>
                   <Link 
                     to="/all-sports-hub" 
-                    className={`flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-purple-500 to-indigo-600 hover:from-purple-600 hover:to-indigo-700 text-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 font-medium`}
+                    className={`hidden sm:flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-purple-500 to-indigo-600 hover:from-purple-600 hover:to-indigo-700 text-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 font-medium`}
                   >
                     {t('View All')} <FiArrowRight className="w-4 h-4" />
                   </Link>
