@@ -19,72 +19,10 @@ const SignIn = () => {
     setError('');
     setLoading(true);
     try {
-      // Validate inputs
-      if (!email || !password) {
-        setError(t('Please enter both email and password'));
-        return;
-      }
-
-      // Validate email format
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if (!emailRegex.test(email)) {
-        setError(t('Please enter a valid email address'));
-        return;
-      }
-
-      // Validate password length
-      if (password.length < 6) {
-        setError(t('Password must be at least 6 characters long'));
-        return;
-      }
-
-      console.log('Attempting login with:', { email });
-      const response = await login(email, password);
-      
-      // Verify we got a valid response
-      if (!response || !response.token) {
-        throw new Error('Invalid server response');
-      }
-
-      console.log('Login successful');
+      await login(email, password);
       navigate('/');
     } catch (err) {
-      console.error('Login error details:', {
-        status: err.response?.status,
-        data: err.response?.data,
-        message: err.message,
-        stack: err.stack
-      });
-
-      // More specific error handling based on error type
-      if (err.message === 'API URL is not configured. Please check your environment variables.') {
-        setError(t('System configuration error. Please contact support.'));
-      } else if (err.message === 'Invalid email format') {
-        setError(t('Please enter a valid email address'));
-      } else if (err.message === 'Invalid server response') {
-        setError(t('Server error. Please try again later.'));
-      } else if (err.response) {
-        // Server responded with an error
-        if (err.response.status === 401) {
-          setError(t('Invalid email or password'));
-        } else if (err.response.status === 400) {
-          setError(err.response.data.msg || t('Invalid input'));
-        } else if (err.response.status === 500) {
-          setError(t('Server error. Please try again later.'));
-        } else if (err.response.data && err.response.data.msg) {
-          setError(err.response.data.msg);
-        } else {
-          setError(t('Login failed. Please try again.'));
-        }
-      } else if (err.request) {
-        // Request was made but no response received
-        console.error('No response received:', err.request);
-        setError(t('Unable to reach the server. Please check your internet connection.'));
-      } else {
-        // Error in request setup
-        console.error('Request setup error:', err.message);
-        setError(t('Login failed. Please try again.'));
-      }
+      setError(err.response?.data?.msg || t('Login failed'));
     } finally {
       setLoading(false);
     }

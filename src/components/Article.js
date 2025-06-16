@@ -399,7 +399,7 @@ function Article({ article }) {
       case 'image-group':
         const images = metadata.images || [];
         if (images.length === 0) return null;
-        
+
         return (
           <figure key={index} className={`my-8 ${alignmentClass}`} style={blockStyle}>
             <div className={`grid gap-4 ${
