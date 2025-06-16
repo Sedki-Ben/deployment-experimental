@@ -15,15 +15,92 @@ const SignUp = () => {
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
 
+  // Enhanced error handling function
+  const handleAuthError = (error) => {
+    // Network errors
+    if (!error.response) {
+      return t('auth.networkError');
+    }
+
+    // Server response errors
+    const status = error.response.status;
+    const serverMessage = error.response?.data?.msg || error.response?.data?.message;
+
+    // Map server messages to translation keys
+    const errorMessageMap = {
+      'Email already exists': 'auth.emailAlreadyExists',
+      'User not found': 'auth.userNotFound',
+      'Invalid credentials': 'auth.invalidCredentials',
+      'Email is required': 'auth.emailRequired',
+      'Password is required': 'auth.passwordRequired',
+      'Name is required': 'auth.nameRequired',
+      'Invalid email format': 'auth.invalidEmailFormat',
+      'Account locked': 'auth.accountLocked'
+    };
+
+    // Check if we have a translation for the server message
+    if (serverMessage && errorMessageMap[serverMessage]) {
+      return t(errorMessageMap[serverMessage]);
+    }
+
+    // Handle by status code
+    switch (status) {
+      case 400:
+        return t('auth.invalidCredentials');
+      case 401:
+        return t('auth.invalidCredentials');
+      case 404:
+        return t('auth.userNotFound');
+      case 409:
+        return t('auth.emailAlreadyExists');
+      case 422:
+        return t('auth.invalidCredentials');
+      case 429:
+        return t('auth.accountLocked');
+      case 500:
+      case 502:
+      case 503:
+        return t('auth.serverError');
+      default:
+        return serverMessage || t('auth.registrationFailed');
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
     setLoading(true);
+
+    // Client-side validation
+    if (!name.trim()) {
+      setError(t('auth.nameRequired'));
+      setLoading(false);
+      return;
+    }
+    if (!email.trim()) {
+      setError(t('auth.emailRequired'));
+      setLoading(false);
+      return;
+    }
+    if (!password.trim()) {
+      setError(t('auth.passwordRequired'));
+      setLoading(false);
+      return;
+    }
+
+    // Basic email format validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      setError(t('auth.invalidEmailFormat'));
+      setLoading(false);
+      return;
+    }
+
     try {
       await register({ name, email, password });
       navigate('/');
     } catch (err) {
-      setError(err.response?.data?.msg || t('Registration failed'));
+      setError(handleAuthError(err));
     } finally {
       setLoading(false);
     }
@@ -63,15 +140,15 @@ const SignUp = () => {
             dir="auto"
           />
           <div className="relative">
-          <input
+            <input
               type={showPassword ? "text" : "password"}
               className="border border-purple-300 dark:border-purple-700 bg-white/70 dark:bg-slate-800/70 p-3 w-full rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-400 dark:focus:ring-purple-600 transition placeholder-gray-400 dark:placeholder-gray-500 text-purple-900 dark:text-purple-100"
-            placeholder={t('Password')}
-            value={password}
-            onChange={e => setPassword(e.target.value)}
-            required
+              placeholder={t('Password')}
+              value={password}
+              onChange={e => setPassword(e.target.value)}
+              required
               dir="auto"
-          />
+            />
             <button
               type="button"
               onClick={togglePasswordVisibility}
@@ -98,4 +175,4 @@ const SignUp = () => {
   );
 };
 
-export default SignUp; 
+export default SignUp;
