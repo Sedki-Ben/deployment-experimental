@@ -22,7 +22,8 @@ const SignIn = () => {
       await login(email, password);
       navigate('/');
     } catch (err) {
-      setError(t(err.response?.data?.message || 'errors.general'));
+      const errorMessage = err.response?.data?.message;
+      setError(errorMessage ? t(errorMessage) : t('errors.general'));
     } finally {
       setLoading(false);
     }
