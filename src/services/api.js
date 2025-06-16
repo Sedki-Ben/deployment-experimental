@@ -4,38 +4,61 @@ import axios from 'axios';
 const getApiUrl = () => {
   const apiUrl = process.env.REACT_APP_API_URL;
   if (!apiUrl) {
-    console.warn('REACT_APP_API_URL is not set, using default localhost URL');
-    return 'http://localhost:5000/api';
+    console.error('REACT_APP_API_URL is not set in environment variables');
+    throw new Error('API URL is not configured. Please check your environment variables.');
   }
   // Ensure the URL ends with /api
   return apiUrl.endsWith('/api') ? apiUrl : `${apiUrl}/api`;
 };
 
-// Log the current API URL for debugging
-console.log('API URL:', getApiUrl());
+// Validate API configuration
+const validateApiConfig = () => {
+  try {
+    const apiUrl = getApiUrl();
+    console.log('API Configuration:', {
+      baseURL: apiUrl,
+      environment: process.env.NODE_ENV,
+      hasApiUrl: !!process.env.REACT_APP_API_URL
+    });
+    return apiUrl;
+  } catch (error) {
+    console.error('API Configuration Error:', error);
+    throw error;
+  }
+};
 
 const api = axios.create({
-    baseURL: getApiUrl(),
+    baseURL: validateApiConfig(),
     headers: {
         'Content-Type': 'application/json'
+    },
+    // Add timeout and validate status
+    timeout: 10000,
+    validateStatus: function (status) {
+        return status >= 200 && status < 500; // Accept all status codes less than 500
     }
 });
 
 // Add a request interceptor to add auth token
 api.interceptors.request.use(
     (config) => {
-        const token = localStorage.getItem('token');
-        if (token) {
-            config.headers.Authorization = `Bearer ${token}`;
+        try {
+            const token = localStorage.getItem('token');
+            if (token) {
+                config.headers.Authorization = `Bearer ${token}`;
+            }
+            // Log the request for debugging
+            console.log('API Request:', {
+                url: `${config.baseURL}${config.url}`,
+                method: config.method,
+                headers: config.headers,
+                data: config.data
+            });
+            return config;
+        } catch (error) {
+            console.error('Request Interceptor Error:', error);
+            return Promise.reject(error);
         }
-        // Log the request for debugging
-        console.log('API Request:', {
-            url: `${config.baseURL}${config.url}`,
-            method: config.method,
-            headers: config.headers,
-            data: config.data
-        });
-        return config;
     },
     (error) => {
         console.error('Request Error:', {
@@ -82,13 +105,31 @@ api.interceptors.response.use(
 
 // Auth endpoints
 export const auth = {
-    login: (email, password) => {
-        console.log('Attempting login with email:', email);
-        return api.post('/auth/login', { email, password });
+    login: async (email, password) => {
+        try {
+            if (!email || !password) {
+                throw new Error('Email and password are required');
+            }
+            console.log('Attempting login with email:', email);
+            const response = await api.post('/auth/login', { email, password });
+            return response.data;
+        } catch (error) {
+            console.error('Login Error:', error);
+            throw error;
+        }
     },
-    register: (userData) => {
-        console.log('Attempting registration with data:', { ...userData, password: '[REDACTED]' });
-        return api.post('/auth/register', userData);
+    register: async (userData) => {
+        try {
+            if (!userData.email || !userData.password) {
+                throw new Error('Email and password are required');
+            }
+            console.log('Attempting registration with data:', { ...userData, password: '[REDACTED]' });
+            const response = await api.post('/auth/register', userData);
+            return response.data;
+        } catch (error) {
+            console.error('Registration Error:', error);
+            throw error;
+        }
     },
     logout: () => api.post('/auth/logout'),
     getCurrentUser: () => api.get('/auth/me'),

@@ -19,6 +19,12 @@ const SignIn = () => {
     setError('');
     setLoading(true);
     try {
+      // Validate inputs
+      if (!email || !password) {
+        setError(t('Please enter both email and password'));
+        return;
+      }
+
       console.log('Attempting login with:', { email });
       const response = await login(email, password);
       console.log('Login response:', response);
@@ -32,7 +38,9 @@ const SignIn = () => {
       });
 
       // More specific error handling based on error type
-      if (err.response) {
+      if (err.message === 'API URL is not configured. Please check your environment variables.') {
+        setError(t('System configuration error. Please contact support.'));
+      } else if (err.response) {
         // Server responded with an error
         if (err.response.status === 401) {
           setError(t('Invalid email or password'));
