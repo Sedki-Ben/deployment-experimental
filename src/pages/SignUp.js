@@ -23,7 +23,7 @@ const SignUp = () => {
       await register({ name, email, password });
       navigate('/');
     } catch (err) {
-      setError(t(authError || 'errors.general'));
+      setError(t(err.message));
     } finally {
       setLoading(false);
     }

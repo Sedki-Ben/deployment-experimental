@@ -53,8 +53,9 @@ export const AuthProvider = ({ children }) => {
             
             return userData;
         } catch (err) {
-            setError(err.response?.data?.message || 'errors.general');
-            throw err;
+            const errorMessage = err.response?.data?.message;
+            setError(errorMessage);
+            throw new Error(errorMessage);
         }
     };
 
@@ -71,8 +72,9 @@ export const AuthProvider = ({ children }) => {
             
             return newUser;
         } catch (err) {
-            setError(err.response?.data?.message || 'errors.general');
-            throw err;
+            const errorMessage = err.response?.data?.message;
+            setError(errorMessage);
+            throw new Error(errorMessage);
         }
     };
 

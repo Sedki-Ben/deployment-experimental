@@ -22,7 +22,7 @@ const SignIn = () => {
       await login(email, password);
       navigate('/');
     } catch (err) {
-      setError(t(authError || 'errors.general'));
+      setError(t(err.message));
     } finally {
       setLoading(false);
     }
