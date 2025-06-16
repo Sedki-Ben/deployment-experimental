@@ -110,29 +110,96 @@ export const auth = {
             if (!email || !password) {
                 throw new Error('Email and password are required');
             }
+
+            // Validate email format
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                throw new Error('Invalid email format');
+            }
+
             console.log('Attempting login with email:', email);
             const response = await api.post('/auth/login', { email, password });
+            
+            // Validate response
+            if (!response.data || !response.data.token) {
+                throw new Error('Invalid server response');
+            }
+
+            // Store token
+            localStorage.setItem('token', response.data.token);
+            
             return response.data;
         } catch (error) {
             console.error('Login Error:', error);
+            // Clear any existing token on error
+            localStorage.removeItem('token');
             throw error;
         }
     },
+
     register: async (userData) => {
         try {
             if (!userData.email || !userData.password) {
                 throw new Error('Email and password are required');
             }
+
+            // Validate email format
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(userData.email)) {
+                throw new Error('Invalid email format');
+            }
+
+            // Validate password strength
+            if (userData.password.length < 6) {
+                throw new Error('Password must be at least 6 characters long');
+            }
+
             console.log('Attempting registration with data:', { ...userData, password: '[REDACTED]' });
             const response = await api.post('/auth/register', userData);
+            
+            // Validate response
+            if (!response.data || !response.data.token) {
+                throw new Error('Invalid server response');
+            }
+
+            // Store token
+            localStorage.setItem('token', response.data.token);
+            
             return response.data;
         } catch (error) {
             console.error('Registration Error:', error);
+            // Clear any existing token on error
+            localStorage.removeItem('token');
             throw error;
         }
     },
-    logout: () => api.post('/auth/logout'),
-    getCurrentUser: () => api.get('/auth/me'),
+
+    logout: async () => {
+        try {
+            await api.post('/auth/logout');
+        } finally {
+            // Always clear token on logout
+            localStorage.removeItem('token');
+        }
+    },
+
+    getCurrentUser: async () => {
+        try {
+            const response = await api.get('/auth/me');
+            if (!response.data) {
+                throw new Error('Invalid user data');
+            }
+            return response.data;
+        } catch (error) {
+            console.error('Get Current User Error:', error);
+            // Clear token if unauthorized
+            if (error.response?.status === 401) {
+                localStorage.removeItem('token');
+            }
+            throw error;
+        }
+    },
+
     updateProfile: (data) => {
         if (data instanceof FormData) {
             return api.put('/auth/profile', data, {
