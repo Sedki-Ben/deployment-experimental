@@ -31,6 +31,12 @@ api.interceptors.response.use(
             // Optionally redirect to login page or trigger auth modal
             window.location.href = '/login';
         }
+        // Handle rate limit errors
+        if (error.response?.status === 429) {
+            const retryAfter = error.response.headers['retry-after'];
+            const message = error.response.data?.message || 'Too many requests. Please try again later.';
+            throw new Error(`${message} ${retryAfter ? `(Retry after ${retryAfter} seconds)` : ''}`);
+        }
         return Promise.reject(error);
     }
 );

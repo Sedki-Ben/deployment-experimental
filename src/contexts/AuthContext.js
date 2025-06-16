@@ -1,6 +1,7 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
 import api from '../services/api';
 import axios from 'axios';
+import { useTranslation } from 'react-i18next';
 
 const AuthContext = createContext(null);
 
@@ -17,6 +18,7 @@ export const AuthProvider = ({ children }) => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [isAuthenticated, setIsAuthenticated] = useState(false);
+    const { t } = useTranslation();
 
     useEffect(() => {
         checkAuth();
@@ -53,7 +55,17 @@ export const AuthProvider = ({ children }) => {
             
             return userData;
         } catch (err) {
-            setError(err.response?.data?.msg || 'Login failed');
+            let errorMessage = t('loginFailed');
+            
+            if (err.response?.status === 429) {
+                errorMessage = err.message; // This will include the retry-after information
+            } else if (err.response?.data?.message) {
+                errorMessage = err.response.data.message;
+            } else if (err.message) {
+                errorMessage = err.message;
+            }
+            
+            setError(errorMessage);
             throw err;
         }
     };
