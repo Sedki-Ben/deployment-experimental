@@ -141,5 +141,25 @@
   "No articles found for": "No articles found for",
   "Try different keywords or browse categories": "Try different keywords or browse categories",
   "Start typing to search articles...": "Start typing to search articles...",
-  "Search in titles, content, and tags": "Search in titles, content, and tags"
+  "Search in titles, content, and tags": "Search in titles, content, and tags",
+  "auth": {
+    "invalidEmailFormat": "Invalid email format",
+    "passwordRequired": "Password is required",
+    "passwordTooShort": "Password must be at least 6 characters",
+    "passwordTooLong": "Password must not exceed 50 characters",
+    "emailRequired": "Email is required",
+    "nameRequired": "Name is required",
+    "nameTooShort": "Name must be at least 2 characters",
+    "nameTooLong": "Name must not exceed 50 characters",
+    "invalidCredentials": "Invalid credentials",
+    "userExists": "User already exists",
+    "serverError": "Server error",
+    "loginSuccess": "Login successful",
+    "registerSuccess": "Registration successful",
+    "logoutSuccess": "Logout successful",
+    "passwordChanged": "Password changed successfully",
+    "currentPasswordIncorrect": "Current password is incorrect",
+    "passwordResetEmailSent": "Password reset email has been sent",
+    "passwordResetSuccess": "Password reset successful"
+  }
 } 

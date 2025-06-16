@@ -141,5 +141,25 @@
   "No articles found for": "لم يتم العثور على مقالات لـ",
   "Try different keywords or browse categories": "جرب كلمات مفتاحية مختلفة أو تصفح الفئات",
   "Start typing to search articles...": "ابدأ بالكتابة للبحث في المقالات...",
-  "Search in titles, content, and tags": "البحث في العناوين والمحتوى والعلامات"
+  "Search in titles, content, and tags": "البحث في العناوين والمحتوى والعلامات",
+  "auth": {
+    "invalidEmailFormat": "صيغة البريد الإلكتروني غير صحيحة",
+    "passwordRequired": "كلمة المرور مطلوبة",
+    "passwordTooShort": "يجب أن تكون كلمة المرور 6 أحرف على الأقل",
+    "passwordTooLong": "يجب أن لا تتجاوز كلمة المرور 50 حرفاً",
+    "emailRequired": "البريد الإلكتروني مطلوب",
+    "nameRequired": "الاسم مطلوب",
+    "nameTooShort": "يجب أن يكون الاسم 2 أحرف على الأقل",
+    "nameTooLong": "يجب أن لا يتجاوز الاسم 50 حرفاً",
+    "invalidCredentials": "بيانات الدخول غير صحيحة",
+    "userExists": "المستخدم موجود بالفعل",
+    "serverError": "خطأ في الخادم",
+    "loginSuccess": "تم تسجيل الدخول بنجاح",
+    "registerSuccess": "تم إنشاء الحساب بنجاح",
+    "logoutSuccess": "تم تسجيل الخروج بنجاح",
+    "passwordChanged": "تم تغيير كلمة المرور بنجاح",
+    "currentPasswordIncorrect": "كلمة المرور الحالية غير صحيحة",
+    "passwordResetEmailSent": "تم إرسال رابط إعادة تعيين كلمة المرور إلى بريدك الإلكتروني",
+    "passwordResetSuccess": "تم إعادة تعيين كلمة المرور بنجاح"
+  }
 } 
