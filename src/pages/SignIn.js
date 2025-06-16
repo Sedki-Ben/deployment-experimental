@@ -24,8 +24,36 @@ const SignIn = () => {
       console.log('Login response:', response);
       navigate('/');
     } catch (err) {
-      console.error('Login error:', err);
-      setError(err.response?.data?.msg || err.message || t('Login failed'));
+      console.error('Login error details:', {
+        status: err.response?.status,
+        data: err.response?.data,
+        message: err.message,
+        stack: err.stack
+      });
+
+      // More specific error handling based on error type
+      if (err.response) {
+        // Server responded with an error
+        if (err.response.status === 401) {
+          setError(t('Invalid email or password'));
+        } else if (err.response.status === 400) {
+          setError(err.response.data.msg || t('Invalid input'));
+        } else if (err.response.status === 500) {
+          setError(t('Server error. Please try again later.'));
+        } else if (err.response.data && err.response.data.msg) {
+          setError(err.response.data.msg);
+        } else {
+          setError(t('Login failed. Please try again.'));
+        }
+      } else if (err.request) {
+        // Request was made but no response received
+        console.error('No response received:', err.request);
+        setError(t('Unable to reach the server. Please check your internet connection.'));
+      } else {
+        // Error in request setup
+        console.error('Request setup error:', err.message);
+        setError(t('Login failed. Please try again.'));
+      }
     } finally {
       setLoading(false);
     }

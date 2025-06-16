@@ -11,6 +11,9 @@ const getApiUrl = () => {
   return apiUrl.endsWith('/api') ? apiUrl : `${apiUrl}/api`;
 };
 
+// Log the current API URL for debugging
+console.log('API URL:', getApiUrl());
+
 const api = axios.create({
     baseURL: getApiUrl(),
     headers: {
@@ -27,14 +30,18 @@ api.interceptors.request.use(
         }
         // Log the request for debugging
         console.log('API Request:', {
-            url: config.url,
+            url: `${config.baseURL}${config.url}`,
             method: config.method,
-            headers: config.headers
+            headers: config.headers,
+            data: config.data
         });
         return config;
     },
     (error) => {
-        console.error('Request Error:', error);
+        console.error('Request Error:', {
+            message: error.message,
+            config: error.config
+        });
         return Promise.reject(error);
     }
 );
@@ -46,6 +53,8 @@ api.interceptors.response.use(
         console.log('API Response:', {
             url: response.config.url,
             status: response.status,
+            statusText: response.statusText,
+            headers: response.headers,
             data: response.data
         });
         return response;
@@ -54,9 +63,12 @@ api.interceptors.response.use(
         // Log detailed error information
         console.error('API Error:', {
             url: error.config?.url,
+            method: error.config?.method,
             status: error.response?.status,
+            statusText: error.response?.statusText,
             data: error.response?.data,
-            message: error.message
+            message: error.message,
+            headers: error.config?.headers
         });
         
         // Handle 401 Unauthorized errors
@@ -70,8 +82,14 @@ api.interceptors.response.use(
 
 // Auth endpoints
 export const auth = {
-    login: (email, password) => api.post('/auth/login', { email, password }),
-    register: (userData) => api.post('/auth/register', userData),
+    login: (email, password) => {
+        console.log('Attempting login with email:', email);
+        return api.post('/auth/login', { email, password });
+    },
+    register: (userData) => {
+        console.log('Attempting registration with data:', { ...userData, password: '[REDACTED]' });
+        return api.post('/auth/register', userData);
+    },
     logout: () => api.post('/auth/logout'),
     getCurrentUser: () => api.get('/auth/me'),
     updateProfile: (data) => {
