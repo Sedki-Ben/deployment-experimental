@@ -6,7 +6,7 @@ import { FiEye, FiEyeOff } from 'react-icons/fi';
 
 const SignUp = () => {
   const { t } = useTranslation();
-  const { register, error: authError } = useAuth();
+  const { register } = useAuth();
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -23,7 +23,7 @@ const SignUp = () => {
       await register({ name, email, password });
       navigate('/');
     } catch (err) {
-      setError(t(err.message));
+      setError(err.response?.data?.msg || t('Registration failed'));
     } finally {
       setLoading(false);
     }
