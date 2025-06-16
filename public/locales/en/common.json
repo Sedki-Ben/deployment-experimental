@@ -160,6 +160,7 @@
     "passwordChanged": "Password changed successfully",
     "currentPasswordIncorrect": "Current password is incorrect",
     "passwordResetEmailSent": "Password reset email has been sent",
-    "passwordResetSuccess": "Password reset successful"
+    "passwordResetSuccess": "Password reset successful",
+    "accountLocked": "Account locked due to repeated login attempts. Please try again in 15 minutes or reset your password"
   }
 } 

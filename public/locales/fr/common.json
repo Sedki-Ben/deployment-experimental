@@ -160,6 +160,7 @@
     "passwordChanged": "Mot de passe modifié avec succès",
     "currentPasswordIncorrect": "Mot de passe actuel incorrect",
     "passwordResetEmailSent": "Un email de réinitialisation du mot de passe a été envoyé",
-    "passwordResetSuccess": "Mot de passe réinitialisé avec succès"
+    "passwordResetSuccess": "Mot de passe réinitialisé avec succès",
+    "accountLocked": "Compte verrouillé en raison de tentatives de connexion répétées. Veuillez réessayer dans 15 minutes ou réinitialiser votre mot de passe"
   }
 } 
