@@ -19,11 +19,13 @@ const SignIn = () => {
     setError('');
     setLoading(true);
     try {
-      await login(email, password);
+      console.log('Attempting login with:', { email });
+      const response = await login(email, password);
+      console.log('Login response:', response);
       navigate('/');
     } catch (err) {
-      setError(err.message || t('Login failed'));
       console.error('Login error:', err);
+      setError(err.response?.data?.msg || err.message || t('Login failed'));
     } finally {
       setLoading(false);
     }

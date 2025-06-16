@@ -1,7 +1,18 @@
 import axios from 'axios';
 
+// Get the API URL from environment variables
+const getApiUrl = () => {
+  const apiUrl = process.env.REACT_APP_API_URL;
+  if (!apiUrl) {
+    console.warn('REACT_APP_API_URL is not set, using default localhost URL');
+    return 'http://localhost:5000/api';
+  }
+  // Ensure the URL ends with /api
+  return apiUrl.endsWith('/api') ? apiUrl : `${apiUrl}/api`;
+};
+
 const api = axios.create({
-    baseURL: process.env.REACT_APP_API_URL || 'http://localhost:5000/api',
+    baseURL: getApiUrl(),
     headers: {
         'Content-Type': 'application/json'
     }
@@ -14,21 +25,43 @@ api.interceptors.request.use(
         if (token) {
             config.headers.Authorization = `Bearer ${token}`;
         }
+        // Log the request for debugging
+        console.log('API Request:', {
+            url: config.url,
+            method: config.method,
+            headers: config.headers
+        });
         return config;
     },
     (error) => {
+        console.error('Request Error:', error);
         return Promise.reject(error);
     }
 );
 
 // Add a response interceptor to handle errors
 api.interceptors.response.use(
-    (response) => response,
+    (response) => {
+        // Log successful responses for debugging
+        console.log('API Response:', {
+            url: response.config.url,
+            status: response.status,
+            data: response.data
+        });
+        return response;
+    },
     (error) => {
+        // Log detailed error information
+        console.error('API Error:', {
+            url: error.config?.url,
+            status: error.response?.status,
+            data: error.response?.data,
+            message: error.message
+        });
+        
         // Handle 401 Unauthorized errors
         if (error.response?.status === 401) {
             localStorage.removeItem('token');
-            // Redirect to signin page instead of login
             window.location.href = '/signin';
         }
         return Promise.reject(error);
