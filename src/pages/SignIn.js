@@ -22,7 +22,8 @@ const SignIn = () => {
       await login(email, password);
       navigate('/');
     } catch (err) {
-      setError(err.response?.data?.msg || t('Login failed'));
+      setError(err.message || t('Login failed'));
+      console.error('Login error:', err);
     } finally {
       setLoading(false);
     }

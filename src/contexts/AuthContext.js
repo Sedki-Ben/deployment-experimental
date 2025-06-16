@@ -26,15 +26,15 @@ export const AuthProvider = ({ children }) => {
         try {
             const token = localStorage.getItem('token');
             if (token) {
-                axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-            const response = await api.get('/auth/me');
-            setUser(response.data);
+                const response = await api.get('/auth/me');
+                setUser(response.data);
                 setIsAuthenticated(true);
             }
         } catch (err) {
             console.error('Auth check failed:', err);
             localStorage.removeItem('token');
-            delete axios.defaults.headers.common['Authorization'];
+            setUser(null);
+            setIsAuthenticated(false);
         } finally {
             setLoading(false);
         }
@@ -47,14 +47,14 @@ export const AuthProvider = ({ children }) => {
             const { token, user: userData } = response.data;
             
             localStorage.setItem('token', token);
-            axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
             setUser(userData);
             setIsAuthenticated(true);
             
             return userData;
         } catch (err) {
-            setError(err.response?.data?.msg || 'Login failed');
-            throw err;
+            const errorMessage = err.response?.data?.msg || 'Login failed';
+            setError(errorMessage);
+            throw new Error(errorMessage);
         }
     };
 
@@ -65,14 +65,14 @@ export const AuthProvider = ({ children }) => {
             const { token, user: newUser } = response.data;
             
             localStorage.setItem('token', token);
-            axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
             setUser(newUser);
             setIsAuthenticated(true);
             
             return newUser;
         } catch (err) {
-            setError(err.response?.data?.msg || 'Registration failed');
-            throw err;
+            const errorMessage = err.response?.data?.msg || 'Registration failed';
+            setError(errorMessage);
+            throw new Error(errorMessage);
         }
     };
 
@@ -83,7 +83,6 @@ export const AuthProvider = ({ children }) => {
             console.error('Logout error:', err);
         } finally {
             localStorage.removeItem('token');
-            delete axios.defaults.headers.common['Authorization'];
             setUser(null);
             setIsAuthenticated(false);
         }

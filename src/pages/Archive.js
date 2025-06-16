@@ -14,24 +14,38 @@ function Archive() {
   const [currentPage, setCurrentPage] = useState(1);
 
   useEffect(() => {
+    if (hookArticles.length > 0) {
+      // Sort articles by date (newest first) to ensure consistent ordering
+      const sortedArticles = [...hookArticles].sort((a, b) => {
+        const dateA = new Date(a.rawDate || a.date);
+        const dateB = new Date(b.rawDate || b.date);
+        return dateB - dateA;
+      });
+      setAllArticles(sortedArticles);
+    }
+  }, [hookArticles]);
+
+  // Force refresh articles when component mounts or when selectedCategory changes
+  useEffect(() => {
     const loadArticles = async () => {
       try {
         const articles = await fetchAllArticles();
-        setAllArticles(articles || []);
+        if (articles && articles.length > 0) {
+          // Sort articles by date (newest first)
+          const sortedArticles = [...articles].sort((a, b) => {
+            const dateA = new Date(a.rawDate || a.date);
+            const dateB = new Date(b.rawDate || b.date);
+            return dateB - dateA;
+          });
+          setAllArticles(sortedArticles);
+        }
       } catch (error) {
         console.error('Error loading articles:', error);
       }
     };
 
     loadArticles();
-  }, [fetchAllArticles]);
-
-  // Update local articles when hook articles change (global cache updates)
-  useEffect(() => {
-    if (hookArticles.length > 0) {
-      setAllArticles(hookArticles);
-    }
-  }, [hookArticles]);
+  }, [fetchAllArticles, selectedCategory]);
 
   // Scroll to top on page change
   useEffect(() => {
