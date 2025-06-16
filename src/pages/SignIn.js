@@ -6,7 +6,7 @@ import { FiEye, FiEyeOff } from 'react-icons/fi';
 
 const SignIn = () => {
   const { t } = useTranslation();
-  const { login } = useAuth();
+  const { login, error: authError } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -22,8 +22,7 @@ const SignIn = () => {
       await login(email, password);
       navigate('/');
     } catch (err) {
-      const errorMessage = err.response?.data?.message;
-      setError(errorMessage ? t(errorMessage) : t('errors.general'));
+      setError(t(authError || 'errors.general'));
     } finally {
       setLoading(false);
     }
