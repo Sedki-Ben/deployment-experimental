@@ -43,9 +43,9 @@ const ContentBlock = ({
   const handleImageChange = (e) => {
     const files = Array.from(e.target.files);
     if (files.length > 0) {
-      const oversizedFiles = files.filter(file => file.size > 5 * 1024 * 1024);
+      const oversizedFiles = files.filter(file => file.size > 50 * 1024 * 1024);
       if (oversizedFiles.length > 0) {
-        alert('Some images are larger than 5MB. Please optimize them first.');
+        alert('Some images are larger than 50MB. Please optimize them first.');
         return;
       }
 

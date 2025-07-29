@@ -29,8 +29,8 @@ const UserProfile = () => {
     linkedin: ''
   });
 
-  // Maximum file size (5MB)
-  const MAX_FILE_SIZE = 5 * 1024 * 1024;
+  // Maximum file size (50MB)
+  const MAX_FILE_SIZE = 50 * 1024 * 1024;
   const ALLOWED_TYPES = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
 
   useEffect(() => {
@@ -77,7 +77,7 @@ const UserProfile = () => {
     }
     
     if (file.size > MAX_FILE_SIZE) {
-      return t('Image size must be less than 5MB');
+      return t('Image size must be less than 50MB');
     }
     
     return true;

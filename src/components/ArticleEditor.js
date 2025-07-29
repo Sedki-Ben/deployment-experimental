@@ -791,10 +791,10 @@ const ArticleEditor = ({ onSave, onCancel, initialData = {}, loading = false, er
   const handleMainImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      if (file.size > 5 * 1024 * 1024) {
-        setLocalError('Main image size should be less than 5MB.');
-        return;
-      }
+          if (file.size > 50 * 1024 * 1024) {
+      setLocalError('Main image size should be less than 50MB.');
+      return;
+    }
       
       // Always create a new image object when user selects a new file
       const newImage = {
